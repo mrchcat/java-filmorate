@@ -24,7 +24,7 @@ public class User {
     @Email
     private String email;
     @NotBlank(message = "login is mandatory")
-    @Pattern(regexp = "\\S")
+    @Pattern(regexp = "[^\\s]*")
     private String login;
     private String name;
     @NotNull
