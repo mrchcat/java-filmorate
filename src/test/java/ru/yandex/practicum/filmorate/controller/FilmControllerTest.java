@@ -101,18 +101,18 @@ class FilmControllerTest {
     }
 
     @Test
-    @DisplayName("Film controller: add film with bad date")
-    void testFilmControllerGetIdAndSaveFilmBadDateTest() {
-        LocalDate releaseDate = LocalDate.of(1000, 1, 1);
-        Film film = Film.builder().name("name").description("desc").releaseDate(releaseDate).duration(100).build();
-        assertThrows(ValidationException.class, () -> filmController.addFilm(film));
-    }
-
-    @Test
     @DisplayName("Validation: add film with bad duration")
     void testValidationBadDuration() {
         LocalDate releaseDate = LocalDate.of(2000, 1, 1);
-        Film film = Film.builder().name("").description("desc").releaseDate(releaseDate).duration(-10).build();
+        Film film = Film.builder().name("kkkk").description("desc").releaseDate(releaseDate).duration(-10).build();
+        assertFalse(validator.validate(film).isEmpty());
+    }
+
+    @Test
+    @DisplayName("Validation: add film with bad release date")
+    void testValidationBadReleaseDate() {
+        LocalDate releaseDate = LocalDate.of(1000, 1, 1);
+        Film film = Film.builder().name("name").description("desc").releaseDate(releaseDate).duration(10).build();
         assertFalse(validator.validate(film).isEmpty());
     }
 }
