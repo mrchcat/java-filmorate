@@ -25,7 +25,7 @@ class UserControllerTest {
 
     @Test
     @DisplayName("User controller: add correct user")
-    void TestUserControllerAddCorrectUser() {
+    void testUserControllerAddCorrectUser() {
         LocalDate birthday = LocalDate.of(2000, 1, 1);
         User user = User.builder().id(22).email("sss@sss.dd").login("login").name("name").birthday(birthday).build();
         ResponseEntity<User> response = userController.addUserHandler(user);
@@ -40,7 +40,7 @@ class UserControllerTest {
 
     @Test
     @DisplayName("User controller: update user")
-    void TestUserControllerUpdateUser() {
+    void testUserControllerUpdateUser() {
         LocalDate birthday = LocalDate.of(2000, 1, 1);
         User user = User.builder().id(22).email("sss@sss.dd").login("login").name("name").birthday(birthday).build();
         User user2 = User.builder()
@@ -58,7 +58,7 @@ class UserControllerTest {
 
     @Test
     @DisplayName("User controller: get all users")
-    void TestUserControllerGetAllUsers() {
+    void testUserControllerGetAllUsers() {
         LocalDate birthday = LocalDate.of(2000, 1, 1);
         User user1 = User.builder().email("sss1@sss.dd").login("login1").name("name1").birthday(birthday).build();
         User user2 = User.builder().email("sss2@sss.dd").login("login2").name("name2").birthday(birthday).build();
@@ -81,7 +81,7 @@ class UserControllerTest {
 
     @Test
     @DisplayName("User controller: add user with bad date")
-    void TestUserControllerAddUserBadDateTest() {
+    void testUserControllerAddUserBadDateTest() {
         LocalDate birthday = LocalDate.of(3000, 1, 1);
         User user = User.builder().id(22).email("sss@sss.dd").login("login").name("name").birthday(birthday).build();
         ResponseEntity<User> response = userController.addUserHandler(user);
@@ -95,7 +95,7 @@ class UserControllerTest {
 
     @Test
     @DisplayName("User controller: add user with bad email")
-    void TestUserControllerAddUserBadEmail() {
+    void testUserControllerAddUserBadEmail() {
         LocalDate birthday = LocalDate.of(1965, 1, 1);
         User user = User.builder().id(22).email("ssssss.dd").login("login").name("name").birthday(birthday).build();
         ResponseEntity<User> response = userController.addUserHandler(user);
@@ -110,7 +110,7 @@ class UserControllerTest {
 
     @Test
     @DisplayName("User controller: update user with bad id")
-    void TestUserControllerUpdateUserBadId() {
+    void testUserControllerUpdateUserBadId() {
         LocalDate birthday = LocalDate.of(2000, 1, 1);
         User user = User.builder().id(22).email("sss@sss.dd").login("login").name("name").birthday(birthday).build();
         User user2 = User.builder()

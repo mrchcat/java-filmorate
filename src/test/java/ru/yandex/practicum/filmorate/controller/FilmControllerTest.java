@@ -25,7 +25,7 @@ class FilmControllerTest {
 
     @Test
     @DisplayName("Film controller: add correct film")
-    void TestFilmControllerAddCorrectFilm() {
+    void testFilmControllerAddCorrectFilm() {
         LocalDate releaseDate = LocalDate.of(2000, 1, 1);
         Film film = Film.builder().id(22).name("name").description("desc").releaseDate(releaseDate).duration(100).build();
         ResponseEntity<Film> response = filmController.addFilmHandler(film);
@@ -40,7 +40,7 @@ class FilmControllerTest {
 
     @Test
     @DisplayName("Film controller: update film")
-    void TestFilmControllerUpdateFilm() {
+    void testFilmControllerUpdateFilm() {
         LocalDate releaseDate = LocalDate.of(2000, 1, 1);
         Film film = Film.builder().id(22).name("name").description("desc").releaseDate(releaseDate).duration(100).build();
         LocalDate updatedRelease = LocalDate.of(2010, 1, 1);
@@ -62,7 +62,7 @@ class FilmControllerTest {
 
     @Test
     @DisplayName("Film controller: get all films")
-    void TestFilmControllerGetAllFilms() {
+    void testFilmControllerGetAllFilms() {
         LocalDate releaseDate = LocalDate.of(2000, 1, 1);
         Film film1 = Film.builder().id(22).name("name").description("desc").releaseDate(releaseDate).duration(100).build();
         Film film2 = Film.builder().name("name2").description("desc2").releaseDate(releaseDate).duration(120).build();
@@ -83,7 +83,7 @@ class FilmControllerTest {
 
     @Test
     @DisplayName("Film controller: add film with bad date")
-    void TestFilmControllerAddFilmBadDateTest() {
+    void testFilmControllerAddFilmBadDateTest() {
         LocalDate releaseDate = LocalDate.of(1000, 1, 1);
         Film film = Film.builder().name("name").description("desc").releaseDate(releaseDate).duration(100).build();
         ResponseEntity<Film> response = filmController.addFilmHandler(film);
@@ -97,7 +97,7 @@ class FilmControllerTest {
 
     @Test
     @DisplayName("Film controller: add film with bad duration")
-    void TestFilmControllerAddFilmBadDuration() {
+    void testFilmControllerAddFilmBadDuration() {
         LocalDate releaseDate = LocalDate.of(1000, 1, 1);
         Film film = Film.builder().name("sss").description("desc").releaseDate(releaseDate).duration(-10).build();
         ResponseEntity<Film> response = filmController.addFilmHandler(film);
@@ -111,7 +111,7 @@ class FilmControllerTest {
 
     @Test
     @DisplayName("Film controller: update film with bad id")
-    void TestFilmControllerUpdateFilmBadId() {
+    void testFilmControllerUpdateFilmBadId() {
         LocalDate releaseDate = LocalDate.of(2000, 1, 1);
         Film film = Film.builder().id(22).name("name").description("desc").releaseDate(releaseDate).duration(100).build();
         LocalDate updatedRelease = LocalDate.of(2010, 1, 1);
