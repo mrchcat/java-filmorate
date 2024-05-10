@@ -20,7 +20,7 @@ import static java.util.Objects.isNull;
 public class UserController {
     @Getter
     private final HashMap<Integer, User> users = new HashMap<>();
-    private static int count = 0;
+    private int count = 0;
 
     @GetMapping
     public ResponseEntity<Collection<User>> getAllUsersHandler() {
@@ -36,14 +36,14 @@ public class UserController {
             addUser(user);
             return new ResponseEntity<>(user, HttpStatusCode.valueOf(201));
         } catch (NullPointerException | ValidationException e) {
-            log.info("User is not added: {} because {}",user, e.getMessage() );
+            log.info("User is not added: {} because {}", user, e.getMessage());
             return new ResponseEntity<>(user, HttpStatusCode.valueOf(400));
         }
     }
 
 
     @PutMapping
-    public ResponseEntity<User> updateFilmHandler(@RequestBody User user) {
+    public ResponseEntity<User> updateUserHandler(@RequestBody User user) {
         try {
             if (user == null) throw new NullPointerException("User is absent");
             checkUserAttrubutes(user);
@@ -57,7 +57,7 @@ public class UserController {
                 return new ResponseEntity<>(user, HttpStatusCode.valueOf(404));
             }
         } catch (NullPointerException | ValidationException e) {
-            log.info("User is not added: {} because {}",user, e.getMessage());
+            log.info("User is not updated: {} because {}", user, e.getMessage());
             return new ResponseEntity<>(user, HttpStatusCode.valueOf(400));
         }
     }

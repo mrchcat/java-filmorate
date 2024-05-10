@@ -1,6 +1,5 @@
 package ru.yandex.practicum.filmorate.controller;
 
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -20,9 +19,8 @@ import static java.util.Objects.nonNull;
 @RequestMapping("/films")
 public class FilmController {
     private final LocalDate EARLIER_RELEASE = LocalDate.of(1895, 12, 28);
-    @Getter
     private final HashMap<Integer, Film> films = new HashMap<>();
-    private static int count = 0;
+    private int count = 0;
 
     @GetMapping
     public ResponseEntity<Collection<Film>> getAllFilmsHandler() {
@@ -57,7 +55,7 @@ public class FilmController {
                 return new ResponseEntity<>(film, HttpStatusCode.valueOf(404));
             }
         } catch (NullPointerException | ValidationException e) {
-            log.info("Film is not added: {} because {}", film, e.getMessage());
+            log.info("Film is not updated: {} because {}", film, e.getMessage());
             return new ResponseEntity<>(film, HttpStatusCode.valueOf(400));
         }
     }
@@ -91,7 +89,7 @@ public class FilmController {
             throw new ValidationException("Release date can not be before " + EARLIER_RELEASE);
         }
         Integer duration = film.getDuration();
-        if (isNull(duration) || duration<=0)
+        if (isNull(duration) || duration <= 0)
             throw new ValidationException("Duration should be positive");
     }
 
