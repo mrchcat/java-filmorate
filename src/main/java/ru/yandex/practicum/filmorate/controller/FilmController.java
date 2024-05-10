@@ -18,7 +18,7 @@ import static java.util.Objects.nonNull;
 @RestController
 @RequestMapping("/films")
 public class FilmController {
-    private final LocalDate EARLIER_RELEASE = LocalDate.of(1895, 12, 28);
+    private final LocalDate earlierRelease = LocalDate.of(1895, 12, 28);
     private final HashMap<Integer, Film> films = new HashMap<>();
     private int count = 0;
 
@@ -85,8 +85,8 @@ public class FilmController {
             throw new ValidationException("Description can not exceed 200 signs");
         }
         LocalDate release = film.getReleaseDate();
-        if (isNull(release) || release.isBefore(EARLIER_RELEASE)) {
-            throw new ValidationException("Release date can not be before " + EARLIER_RELEASE);
+        if (isNull(release) || release.isBefore(earlierRelease)) {
+            throw new ValidationException("Release date can not be before " + earlierRelease);
         }
         Integer duration = film.getDuration();
         if (isNull(duration) || duration <= 0)
