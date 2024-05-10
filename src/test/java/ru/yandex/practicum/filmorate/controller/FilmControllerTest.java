@@ -46,8 +46,8 @@ class FilmControllerTest {
         Film film = Film.builder()
                 .id(22).name("name").description("desc").releaseDate(releaseDate).duration(100).build();
         LocalDate updatedRelease = LocalDate.of(2010, 1, 1);
-        Film film2 = Film.builder().
-                id(1).name("newName").description("newDesc").releaseDate(updatedRelease).duration(120).build();
+        Film film2 = Film.builder()
+                .id(1).name("newName").description("newDesc").releaseDate(updatedRelease).duration(120).build();
 
         filmController.addFilmHandler(film);
         ResponseEntity<Film> response = filmController.updateFilmHandler(film2);
@@ -120,8 +120,8 @@ class FilmControllerTest {
                 .id(22).name("name").description("desc").releaseDate(releaseDate).duration(100).build();
         LocalDate updatedRelease = LocalDate.of(2010, 1, 1);
 
-        Film film2 = Film.builder().
-                id(100).name("newName").description("newDesc").releaseDate(updatedRelease).duration(120).build();
+        Film film2 = Film.builder()
+                .id(100).name("newName").description("newDesc").releaseDate(updatedRelease).duration(120).build();
 
         filmController.addFilmHandler(film);
         ResponseEntity<Film> response = filmController.updateFilmHandler(film2);
