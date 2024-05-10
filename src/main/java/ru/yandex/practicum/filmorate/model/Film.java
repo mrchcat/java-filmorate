@@ -1,16 +1,30 @@
 package ru.yandex.practicum.filmorate.model;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.Builder;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+import org.hibernate.validator.constraints.Length;
 
 import java.time.LocalDate;
 
-@Data
+@Setter
+@Getter
 @Builder
+@EqualsAndHashCode(exclude = {"id", "description"})
+@ToString
 public class Film {
     private int id;
+    @NotBlank(message = "Name is mandatory")
     private String name;
+    @NotNull
+    @Length(max = 200, message = "Description must be less than 200 digits")
     private String description;
     private LocalDate releaseDate;
-    private Integer duration;
+    @Positive(message = "Duration must be positive integer")
+    private int duration;
 }

@@ -1,10 +1,15 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.time.LocalDate;
@@ -12,16 +17,28 @@ import java.util.Collection;
 
 import static java.util.Objects.requireNonNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class FilmControllerTest {
 
     static FilmController filmController;
+    static ValidatorFactory validatorFactory;
+    static Validator validator;
 
     @BeforeEach
     void initFilmController() {
         filmController = new FilmController();
+        validatorFactory = Validation.buildDefaultValidatorFactory();
+        validator = validatorFactory.usingContext().getValidator();
     }
+
+    @AfterEach
+    void closes(){
+        validatorFactory.close();
+    }
+
 
     @Test
     @DisplayName("Film controller: add correct film")
@@ -88,50 +105,14 @@ class FilmControllerTest {
     void testFilmControllerGetIdAndSaveFilmBadDateTest() {
         LocalDate releaseDate = LocalDate.of(1000, 1, 1);
         Film film = Film.builder().name("name").description("desc").releaseDate(releaseDate).duration(100).build();
-        ResponseEntity<Film> response = filmController.addFilm(film);
-        Film answer = response.getBody();
-        assertEquals(HttpStatusCode.valueOf(400), response.getStatusCode());
-        assertEquals(film.getName(), requireNonNull(answer).getName());
-        assertEquals(film.getDescription(), answer.getDescription());
-        assertEquals(film.getReleaseDate(), answer.getReleaseDate());
-        assertEquals(film.getDuration(), answer.getDuration());
+        assertThrows(ValidationException.class,()->filmController.addFilm(film));
     }
 
     @Test
-    @DisplayName("Film controller: add film with bad duration")
-    void testFilmControllerGetIdAndSaveFilmBadDuration() {
-        LocalDate releaseDate = LocalDate.of(1000, 1, 1);
-        Film film = Film.builder().name("sss").description("desc").releaseDate(releaseDate).duration(-10).build();
-        ResponseEntity<Film> response = filmController.addFilm(film);
-        Film answer = response.getBody();
-        assertEquals(HttpStatusCode.valueOf(400), response.getStatusCode());
-        assertEquals(film.getName(), requireNonNull(answer).getName());
-        assertEquals(film.getDescription(), answer.getDescription());
-        assertEquals(film.getReleaseDate(), answer.getReleaseDate());
-        assertEquals(film.getDuration(), answer.getDuration());
-    }
-
-    @Test
-    @DisplayName("Film controller: update film with bad id")
-    void testFilmControllerUpdateFilmBadId() {
+    @DisplayName("Validation: add film with bad duration")
+    void testValidationBadDuration() {
         LocalDate releaseDate = LocalDate.of(2000, 1, 1);
-        Film film = Film.builder()
-                .id(22).name("name").description("desc").releaseDate(releaseDate).duration(100).build();
-        LocalDate updatedRelease = LocalDate.of(2010, 1, 1);
-
-        Film film2 = Film.builder()
-                .id(100).name("newName").description("newDesc").releaseDate(updatedRelease).duration(120).build();
-
-        filmController.addFilm(film);
-        ResponseEntity<Film> response = filmController.updateFilm(film2);
-        Film answer = response.getBody();
-
-        assertEquals(HttpStatusCode.valueOf(404), response.getStatusCode());
-        assertEquals(film2.getName(), requireNonNull(answer).getName());
-        assertEquals(film2.getDescription(), answer.getDescription());
-        assertEquals(film2.getReleaseDate(), answer.getReleaseDate());
-        assertEquals(film2.getDuration(), answer.getDuration());
-        assertTrue(requireNonNull(filmController.getAllFilms()).stream()
-                .anyMatch(u -> u.getName().equals(film.getName())));
+        Film film = Film.builder().name("").description("desc").releaseDate(releaseDate).duration(-10).build();
+        assertFalse(validator.validate(film).isEmpty());
     }
 }

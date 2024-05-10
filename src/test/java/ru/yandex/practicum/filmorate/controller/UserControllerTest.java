@@ -1,5 +1,9 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,15 +16,25 @@ import java.util.Collection;
 
 import static java.util.Objects.requireNonNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class UserControllerTest {
 
     static UserController userController;
+    static ValidatorFactory validatorFactory;
+    static Validator validator;
 
     @BeforeEach
     void initUserController() {
         userController = new UserController();
+        validatorFactory = Validation.buildDefaultValidatorFactory();
+        validator = validatorFactory.usingContext().getValidator();
+    }
+
+    @AfterEach
+    void closes(){
+        validatorFactory.close();
     }
 
     @Test
@@ -83,27 +97,15 @@ class UserControllerTest {
     void testUserControllerGetIdAndSaveUserBadDateTest() {
         LocalDate birthday = LocalDate.of(3000, 1, 1);
         User user = User.builder().id(22).email("sss@sss.dd").login("login").name("name").birthday(birthday).build();
-        ResponseEntity<User> response = userController.addUser(user);
-        User answer = response.getBody();
-        assertEquals(HttpStatusCode.valueOf(400), response.getStatusCode());
-        assertEquals(user.getEmail(), requireNonNull(answer).getEmail());
-        assertEquals(user.getLogin(), answer.getLogin());
-        assertEquals(user.getName(), answer.getName());
-        assertEquals(user.getBirthday(), answer.getBirthday());
+        assertFalse(validator.validate(user).isEmpty());
     }
 
     @Test
     @DisplayName("User controller: add user with bad email")
     void testUserControllerGetIdAndSaveUserBadEmail() {
         LocalDate birthday = LocalDate.of(1965, 1, 1);
-        User user = User.builder().id(22).email("ssssss.dd").login("login").name("name").birthday(birthday).build();
-        ResponseEntity<User> response = userController.addUser(user);
-        User answer = response.getBody();
-        assertEquals(HttpStatusCode.valueOf(400), response.getStatusCode());
-        assertEquals(user.getEmail(), requireNonNull(answer).getEmail());
-        assertEquals(user.getLogin(), answer.getLogin());
-        assertEquals(user.getName(), answer.getName());
-        assertEquals(user.getBirthday(), answer.getBirthday());
+        User user = User.builder().id(22).email("ssssssdd.ee").login("login").name("name").birthday(birthday).build();
+        assertFalse(validator.validate(user).isEmpty());
     }
 
 
