@@ -113,4 +113,12 @@ class FilmControllerTest {
         Film film = Film.builder().name("name").description("desc").releaseDate(releaseDate).duration(10).build();
         assertFalse(validator.validate(film).isEmpty());
     }
+
+    @Test
+    @DisplayName("Validation: add film with good release date")
+    void testValidationGoodReleaseDate() {
+        LocalDate releaseDate = LocalDate.of(1980, 1, 1);
+        Film film = Film.builder().name("name").description("desc").releaseDate(releaseDate).duration(10).build();
+        assertFalse(validator.validate(film).isEmpty());
+    }
 }
