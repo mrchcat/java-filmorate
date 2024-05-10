@@ -109,7 +109,7 @@ class FilmControllerTest {
     @Test
     @DisplayName("Validation: add film with bad release date")
     void testValidationBadReleaseDate() {
-        LocalDate releaseDate = LocalDate.of(1000, 1, 1);
+        LocalDate releaseDate = LocalDate.of(600, 1, 1);
         Film film = Film.builder().name("name").description("desc").releaseDate(releaseDate).duration(10).build();
         assertFalse(validator.validate(film).isEmpty());
     }
