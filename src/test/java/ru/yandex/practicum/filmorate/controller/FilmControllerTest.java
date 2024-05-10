@@ -27,7 +27,8 @@ class FilmControllerTest {
     @DisplayName("Film controller: add correct film")
     void testFilmControllerAddCorrectFilm() {
         LocalDate releaseDate = LocalDate.of(2000, 1, 1);
-        Film film = Film.builder().id(22).name("name").description("desc").releaseDate(releaseDate).duration(100).build();
+        Film film = Film.builder()
+                .id(22).name("name").description("desc").releaseDate(releaseDate).duration(100).build();
         ResponseEntity<Film> response = filmController.addFilmHandler(film);
         Film answer = response.getBody();
         assertEquals(HttpStatusCode.valueOf(201), response.getStatusCode());
@@ -42,7 +43,8 @@ class FilmControllerTest {
     @DisplayName("Film controller: update film")
     void testFilmControllerUpdateFilm() {
         LocalDate releaseDate = LocalDate.of(2000, 1, 1);
-        Film film = Film.builder().id(22).name("name").description("desc").releaseDate(releaseDate).duration(100).build();
+        Film film = Film.builder()
+                .id(22).name("name").description("desc").releaseDate(releaseDate).duration(100).build();
         LocalDate updatedRelease = LocalDate.of(2010, 1, 1);
         Film film2 = Film.builder().
                 id(1).name("newName").description("newDesc").releaseDate(updatedRelease).duration(120).build();
@@ -64,7 +66,8 @@ class FilmControllerTest {
     @DisplayName("Film controller: get all films")
     void testFilmControllerGetAllFilms() {
         LocalDate releaseDate = LocalDate.of(2000, 1, 1);
-        Film film1 = Film.builder().id(22).name("name").description("desc").releaseDate(releaseDate).duration(100).build();
+        Film film1 = Film.builder()
+                .id(22).name("name").description("desc").releaseDate(releaseDate).duration(100).build();
         Film film2 = Film.builder().name("name2").description("desc2").releaseDate(releaseDate).duration(120).build();
         Film film3 = Film.builder().name("name3").description("desc3").releaseDate(releaseDate).duration(100).build();
         filmController.addFilmHandler(film1);
@@ -113,7 +116,8 @@ class FilmControllerTest {
     @DisplayName("Film controller: update film with bad id")
     void testFilmControllerUpdateFilmBadId() {
         LocalDate releaseDate = LocalDate.of(2000, 1, 1);
-        Film film = Film.builder().id(22).name("name").description("desc").releaseDate(releaseDate).duration(100).build();
+        Film film = Film.builder()
+                .id(22).name("name").description("desc").releaseDate(releaseDate).duration(100).build();
         LocalDate updatedRelease = LocalDate.of(2010, 1, 1);
 
         Film film2 = Film.builder().
