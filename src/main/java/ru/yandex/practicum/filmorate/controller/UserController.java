@@ -34,10 +34,6 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<User> addUser(@Valid @RequestBody User user) {
-        if (user == null) {
-            log.info("User is not added because is absent");
-            throw new ValidationException("User is absent");
-        }
         checkUserAttributes(user);
         if (notUnique(user)) {
             log.info("User is not added: {} because User already exists", user);
@@ -51,10 +47,6 @@ public class UserController {
 
     @PutMapping
     public ResponseEntity<User> updateUser(@Valid @RequestBody User user) {
-        if (user == null) {
-            log.info("User is not updated because User is absent");
-            throw new NullPointerException("User is absent");
-        }
         checkUserAttributes(user);
         int id = user.getId();
         if (users.containsKey(id)) {
@@ -62,7 +54,7 @@ public class UserController {
             log.info("User updated: {}", user);
             return new ResponseEntity<>(user, HttpStatusCode.valueOf(200));
         } else {
-            log.info("User is not updated: {} because Not found", user);
+            log.info("User is not updated: {} because not found id=", user.getId());
             return new ResponseEntity<>(user, HttpStatusCode.valueOf(404));
         }
     }

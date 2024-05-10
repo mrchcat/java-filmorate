@@ -19,12 +19,12 @@ import java.time.LocalDate;
 @ToString
 public class Film {
     private int id;
-    @NotBlank(message = "Name is mandatory")
+    @NotBlank(message = "name is mandatory")
     private String name;
-    @NotNull
-    @Length(max = 200, message = "Description must be less than 200 digits")
+    @NotNull (message = "description is mandatory")
+    @Length(max = 200, message = "description must be less than 200 digits")
     private String description;
     private LocalDate releaseDate;
-    @Positive(message = "Duration must be positive integer")
+    @Positive(message = "duration must be positive integer")
     private int duration;
 }

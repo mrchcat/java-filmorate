@@ -34,10 +34,6 @@ public class FilmController {
 
     @PostMapping
     public ResponseEntity<Film> addFilm(@Valid @RequestBody Film film) {
-        if (film == null) {
-            log.info("Film is not added because is absent");
-            throw new ValidationException("Film is absent");
-        }
         checkFilmAttributes(film);
         if (notUnique(film)) {
             log.info("Film is not added: {} because Film already exists", film);
@@ -50,17 +46,13 @@ public class FilmController {
 
     @PutMapping
     public ResponseEntity<Film> updateFilm(@Valid @RequestBody Film film) {
-        if (film == null) {
-            log.info("Film is not updated because is absent");
-            throw new ValidationException("Film is absent");
-        }
         int id = film.getId();
         if (films.containsKey(id)) {
             films.put(id, film);
             log.info("Film is updated: {}", film);
             return new ResponseEntity<>(film, HttpStatusCode.valueOf(200));
         } else {
-            log.info("Film is not updated: not found {}", film);
+            log.info("Film is not updated: not found id={}", film.getId());
             return new ResponseEntity<>(film, HttpStatusCode.valueOf(404));
         }
     }
