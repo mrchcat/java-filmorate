@@ -29,7 +29,7 @@ class FilmControllerTest {
         LocalDate releaseDate = LocalDate.of(2000, 1, 1);
         Film film = Film.builder()
                 .id(22).name("name").description("desc").releaseDate(releaseDate).duration(100).build();
-        ResponseEntity<Film> response = filmController.addFilmHandler(film);
+        ResponseEntity<Film> response = filmController.addFilm(film);
         Film answer = response.getBody();
         assertEquals(HttpStatusCode.valueOf(201), response.getStatusCode());
         assertEquals(1, requireNonNull(answer).getId());
@@ -49,8 +49,8 @@ class FilmControllerTest {
         Film film2 = Film.builder()
                 .id(1).name("newName").description("newDesc").releaseDate(updatedRelease).duration(120).build();
 
-        filmController.addFilmHandler(film);
-        ResponseEntity<Film> response = filmController.updateFilmHandler(film2);
+        filmController.addFilm(film);
+        ResponseEntity<Film> response = filmController.updateFilm(film2);
         Film answer = response.getBody();
 
         assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
@@ -59,7 +59,7 @@ class FilmControllerTest {
         assertEquals(film2.getDescription(), answer.getDescription());
         assertEquals(film2.getReleaseDate(), answer.getReleaseDate());
         assertEquals(film2.getDuration(), answer.getDuration());
-        assertEquals(1, requireNonNull(filmController.getAllFilmsHandler().getBody()).size());
+        assertEquals(1, requireNonNull(filmController.getAllFilms()).size());
     }
 
     @Test
@@ -70,11 +70,10 @@ class FilmControllerTest {
                 .id(22).name("name").description("desc").releaseDate(releaseDate).duration(100).build();
         Film film2 = Film.builder().name("name2").description("desc2").releaseDate(releaseDate).duration(120).build();
         Film film3 = Film.builder().name("name3").description("desc3").releaseDate(releaseDate).duration(100).build();
-        filmController.addFilmHandler(film1);
-        filmController.addFilmHandler(film2);
-        filmController.addFilmHandler(film3);
-        ResponseEntity<Collection<Film>> response = filmController.getAllFilmsHandler();
-        Collection<Film> films = response.getBody();
+        filmController.addFilm(film1);
+        filmController.addFilm(film2);
+        filmController.addFilm(film3);
+        Collection<Film> films = filmController.getAllFilms();
         assertEquals(3, requireNonNull(films).size());
         assertTrue(films.stream().anyMatch(u -> u.getName().equals(film1.getName())));
         assertTrue(films.stream().anyMatch(u -> u.getName().equals(film2.getName())));
@@ -86,10 +85,10 @@ class FilmControllerTest {
 
     @Test
     @DisplayName("Film controller: add film with bad date")
-    void testFilmControllerAddFilmBadDateTest() {
+    void testFilmControllerGetIdAndSaveFilmBadDateTest() {
         LocalDate releaseDate = LocalDate.of(1000, 1, 1);
         Film film = Film.builder().name("name").description("desc").releaseDate(releaseDate).duration(100).build();
-        ResponseEntity<Film> response = filmController.addFilmHandler(film);
+        ResponseEntity<Film> response = filmController.addFilm(film);
         Film answer = response.getBody();
         assertEquals(HttpStatusCode.valueOf(400), response.getStatusCode());
         assertEquals(film.getName(), requireNonNull(answer).getName());
@@ -100,10 +99,10 @@ class FilmControllerTest {
 
     @Test
     @DisplayName("Film controller: add film with bad duration")
-    void testFilmControllerAddFilmBadDuration() {
+    void testFilmControllerGetIdAndSaveFilmBadDuration() {
         LocalDate releaseDate = LocalDate.of(1000, 1, 1);
         Film film = Film.builder().name("sss").description("desc").releaseDate(releaseDate).duration(-10).build();
-        ResponseEntity<Film> response = filmController.addFilmHandler(film);
+        ResponseEntity<Film> response = filmController.addFilm(film);
         Film answer = response.getBody();
         assertEquals(HttpStatusCode.valueOf(400), response.getStatusCode());
         assertEquals(film.getName(), requireNonNull(answer).getName());
@@ -123,8 +122,8 @@ class FilmControllerTest {
         Film film2 = Film.builder()
                 .id(100).name("newName").description("newDesc").releaseDate(updatedRelease).duration(120).build();
 
-        filmController.addFilmHandler(film);
-        ResponseEntity<Film> response = filmController.updateFilmHandler(film2);
+        filmController.addFilm(film);
+        ResponseEntity<Film> response = filmController.updateFilm(film2);
         Film answer = response.getBody();
 
         assertEquals(HttpStatusCode.valueOf(404), response.getStatusCode());
@@ -132,7 +131,7 @@ class FilmControllerTest {
         assertEquals(film2.getDescription(), answer.getDescription());
         assertEquals(film2.getReleaseDate(), answer.getReleaseDate());
         assertEquals(film2.getDuration(), answer.getDuration());
-        assertTrue(requireNonNull(filmController.getAllFilmsHandler().getBody()).stream()
+        assertTrue(requireNonNull(filmController.getAllFilms()).stream()
                 .anyMatch(u -> u.getName().equals(film.getName())));
     }
 }

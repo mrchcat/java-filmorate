@@ -3,7 +3,12 @@ package ru.yandex.practicum.filmorate.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 
@@ -18,33 +23,40 @@ import static java.util.Objects.nonNull;
 @RestController
 @RequestMapping("/films")
 public class FilmController {
-    private final LocalDate earlierRelease = LocalDate.of(1895, 12, 28);
+    private static final LocalDate EARLIER_RELEASE = LocalDate.of(1895, 12, 28);
     private final HashMap<Integer, Film> films = new HashMap<>();
     private int count = 0;
 
     @GetMapping
-    public ResponseEntity<Collection<Film>> getAllFilmsHandler() {
-        return new ResponseEntity<>(films.values(), HttpStatusCode.valueOf(200));
+    public Collection<Film> getAllFilms() {
+        return films.values();
     }
 
     @PostMapping
-    public ResponseEntity<Film> addFilmHandler(@RequestBody Film film) {
+    public ResponseEntity<Film> addFilm(@RequestBody Film film) {
         try {
-            if (film == null) throw new NullPointerException("Film is absent");
+            if (film == null) {
+                log.info("Film is not added: {} because data is absent", film);
+                throw new ValidationException("Film is absent");
+            }
             checkFilmAttributes(film);
-            if (notUnique(film)) throw new ValidationException("Film already exists");
-            addFilm(film);
+            if (notUnique(film)) {
+                throw new ValidationException("Film already exists");
+            }
+            getIdAndSaveFilm(film);
             return new ResponseEntity<>(film, HttpStatusCode.valueOf(201));
-        } catch (NullPointerException | ValidationException e) {
+        } catch (ValidationException e) {
             log.info("Film is not added: {} because {}", film, e.getMessage());
             return new ResponseEntity<>(film, HttpStatusCode.valueOf(400));
         }
     }
 
     @PutMapping
-    public ResponseEntity<Film> updateFilmHandler(@RequestBody Film film) {
+    public ResponseEntity<Film> updateFilm(@RequestBody Film film) {
         try {
-            if (film == null) throw new NullPointerException("Film is absent");
+            if (film == null) {
+                throw new NullPointerException("Film is absent");
+            }
             int id = film.getId();
             if (films.containsKey(id)) {
                 films.put(id, film);
@@ -60,7 +72,7 @@ public class FilmController {
         }
     }
 
-    private void addFilm(Film film) {
+    private void getIdAndSaveFilm(Film film) {
         int id = getNextId();
         film.setId(id);
         films.put(id, film);
@@ -85,8 +97,8 @@ public class FilmController {
             throw new ValidationException("Description can not exceed 200 signs");
         }
         LocalDate release = film.getReleaseDate();
-        if (isNull(release) || release.isBefore(earlierRelease)) {
-            throw new ValidationException("Release date can not be before " + earlierRelease);
+        if (isNull(release) || release.isBefore(EARLIER_RELEASE)) {
+            throw new ValidationException("Release date can not be before " + EARLIER_RELEASE);
         }
         Integer duration = film.getDuration();
         if (isNull(duration) || duration <= 0)

@@ -4,7 +4,12 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
@@ -23,19 +28,23 @@ public class UserController {
     private int count = 0;
 
     @GetMapping
-    public ResponseEntity<Collection<User>> getAllUsersHandler() {
-        return new ResponseEntity<>(users.values(), HttpStatusCode.valueOf(200));
+    public Collection<User> getAllUsers() {
+        return users.values();
     }
 
     @PostMapping
-    public ResponseEntity<User> addUserHandler(@RequestBody User user) {
+    public ResponseEntity<User> addUser(@RequestBody User user) {
         try {
-            if (user == null) throw new NullPointerException("User is absent");
-            checkUserAttrubutes(user);
-            if (notUnique(user)) throw new ValidationException("User already exists");
-            addUser(user);
+            if (user == null) {
+                throw new ValidationException("User is absent");
+            }
+            checkUserAttributes(user);
+            if (notUnique(user)) {
+                throw new ValidationException("User already exists");
+            }
+            getIdAndSaveUser(user);
             return new ResponseEntity<>(user, HttpStatusCode.valueOf(201));
-        } catch (NullPointerException | ValidationException e) {
+        } catch (ValidationException e) {
             log.info("User is not added: {} because {}", user, e.getMessage());
             return new ResponseEntity<>(user, HttpStatusCode.valueOf(400));
         }
@@ -43,10 +52,12 @@ public class UserController {
 
 
     @PutMapping
-    public ResponseEntity<User> updateUserHandler(@RequestBody User user) {
+    public ResponseEntity<User> updateUser(@RequestBody User user) {
         try {
-            if (user == null) throw new NullPointerException("User is absent");
-            checkUserAttrubutes(user);
+            if (user == null) {
+                throw new NullPointerException("User is absent");
+            }
+            checkUserAttributes(user);
             int id = user.getId();
             if (users.containsKey(id)) {
                 users.put(id, user);
@@ -62,7 +73,7 @@ public class UserController {
         }
     }
 
-    private void addUser(User user) {
+    private void getIdAndSaveUser(User user) {
         int id = getNextId();
         user.setId(id);
         users.put(id, user);
@@ -73,7 +84,7 @@ public class UserController {
         return users.values().stream().anyMatch(u -> u.getEmail().equals(user.getEmail()));
     }
 
-    private void checkUserAttrubutes(User user) {
+    private void checkUserAttributes(User user) {
         String email = user.getEmail();
         if (isNull(email) || !email.matches("^\\S+@\\S+\\.\\S+$")) {
             throw new ValidationException("Error in e-mail");
