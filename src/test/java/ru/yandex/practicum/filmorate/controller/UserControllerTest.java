@@ -33,7 +33,7 @@ class UserControllerTest {
     }
 
     @AfterEach
-    void closes(){
+    void closes() {
         validatorFactory.close();
     }
 

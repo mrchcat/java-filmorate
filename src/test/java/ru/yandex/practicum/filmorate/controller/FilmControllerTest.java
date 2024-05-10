@@ -35,7 +35,7 @@ class FilmControllerTest {
     }
 
     @AfterEach
-    void closes(){
+    void closes() {
         validatorFactory.close();
     }
 
@@ -105,7 +105,7 @@ class FilmControllerTest {
     void testFilmControllerGetIdAndSaveFilmBadDateTest() {
         LocalDate releaseDate = LocalDate.of(1000, 1, 1);
         Film film = Film.builder().name("name").description("desc").releaseDate(releaseDate).duration(100).build();
-        assertThrows(ValidationException.class,()->filmController.addFilm(film));
+        assertThrows(ValidationException.class, () -> filmController.addFilm(film));
     }
 
     @Test
