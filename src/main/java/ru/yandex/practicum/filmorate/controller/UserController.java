@@ -34,12 +34,14 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<User> addUser(@Valid @RequestBody User user) {
-        checkUserAttributes(user);
+        setName(user);
         if (notUnique(user)) {
             log.info("User is not added: {} because User already exists", user);
             throw new ValidationException("User already exists");
         }
-        getIdAndSaveUser(user);
+        int id = getNextId();
+        user.setId(id);
+        users.put(id, user);
         log.info("User added: {}", user);
         return new ResponseEntity<>(user, HttpStatusCode.valueOf(201));
     }
@@ -47,29 +49,23 @@ public class UserController {
 
     @PutMapping
     public ResponseEntity<User> updateUser(@Valid @RequestBody User user) {
-        checkUserAttributes(user);
+        setName(user);
         int id = user.getId();
         if (users.containsKey(id)) {
             users.put(id, user);
             log.info("User updated: {}", user);
             return new ResponseEntity<>(user, HttpStatusCode.valueOf(200));
         } else {
-            log.info("User is not updated: {} because not found id=", user.getId());
+            log.info("User is not updated: because id={} not found ", user.getId());
             return new ResponseEntity<>(user, HttpStatusCode.valueOf(404));
         }
-    }
-
-    private void getIdAndSaveUser(User user) {
-        int id = getNextId();
-        user.setId(id);
-        users.put(id, user);
     }
 
     private boolean notUnique(User user) {
         return users.containsValue(user);
     }
 
-    private void checkUserAttributes(User user) {
+    private void setName(User user) {
         String name = user.getName();
         if (isNull(name) || name.isEmpty()) {
             user.setName(user.getLogin());

@@ -9,7 +9,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.time.LocalDate;
@@ -18,7 +17,6 @@ import java.util.Collection;
 import static java.util.Objects.requireNonNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class FilmControllerTest {
@@ -101,18 +99,18 @@ class FilmControllerTest {
     }
 
     @Test
-    @DisplayName("Film controller: add film with bad date")
-    void testFilmControllerGetIdAndSaveFilmBadDateTest() {
-        LocalDate releaseDate = LocalDate.of(1000, 1, 1);
-        Film film = Film.builder().name("name").description("desc").releaseDate(releaseDate).duration(100).build();
-        assertThrows(ValidationException.class, () -> filmController.addFilm(film));
-    }
-
-    @Test
     @DisplayName("Validation: add film with bad duration")
     void testValidationBadDuration() {
         LocalDate releaseDate = LocalDate.of(2000, 1, 1);
-        Film film = Film.builder().name("").description("desc").releaseDate(releaseDate).duration(-10).build();
+        Film film = Film.builder().name("kkkk").description("desc").releaseDate(releaseDate).duration(-10).build();
+        assertFalse(validator.validate(film).isEmpty());
+    }
+
+    @Test
+    @DisplayName("Validation: add film with bad release date")
+    void testValidationBadReleaseDate() {
+        LocalDate releaseDate = LocalDate.of(1000, 1, 1);
+        Film film = Film.builder().name("name").description("desc").releaseDate(releaseDate).duration(10).build();
         assertFalse(validator.validate(film).isEmpty());
     }
 }

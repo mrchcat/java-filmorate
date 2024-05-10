@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.validator.constraints.Length;
+import ru.yandex.practicum.filmorate.annotations.AfterCinemaEra;
 
 import java.time.LocalDate;
 
@@ -21,9 +22,10 @@ public class Film {
     private int id;
     @NotBlank(message = "name is mandatory")
     private String name;
-    @NotNull (message = "description is mandatory")
+    @NotNull(message = "description is mandatory")
     @Length(max = 200, message = "description must be less than 200 digits")
     private String description;
+    @AfterCinemaEra(message = "release date is too early")
     private LocalDate releaseDate;
     @Positive(message = "duration must be positive integer")
     private int duration;
