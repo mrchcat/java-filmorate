@@ -9,6 +9,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import ru.yandex.practicum.filmorate.exceptions.IdNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
@@ -17,6 +18,7 @@ import java.util.Collection;
 import static java.util.Objects.requireNonNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class UserControllerTest {
@@ -114,16 +116,9 @@ class UserControllerTest {
     void testUserControllerUpdateUserBadId() {
         LocalDate birthday = LocalDate.of(2000, 1, 1);
         User user = User.builder().id(22).email("sss@sss.dd").login("login").name("name").birthday(birthday).build();
+        userController.addUser(user);
         User user2 = User.builder()
                 .id(100).email("sdd@dsd.fs").login("upLogin").name("upName").birthday(birthday).build();
-        userController.addUser(user);
-        ResponseEntity<User> response = userController.updateUser(user2);
-        User answer = response.getBody();
-        assertEquals(HttpStatusCode.valueOf(404), response.getStatusCode());
-        assertEquals(user2.getEmail(), requireNonNull(answer).getEmail());
-        assertEquals(user2.getLogin(), answer.getLogin());
-        assertEquals(user2.getName(), answer.getName());
-        assertEquals(1, userController.getAllUsers().size());
-        assertTrue(userController.getAllUsers().stream().anyMatch(u -> u.getName().equals(user.getName())));
+        assertThrows(IdNotFoundException.class,()->userController.updateUser(user2));
     }
 }

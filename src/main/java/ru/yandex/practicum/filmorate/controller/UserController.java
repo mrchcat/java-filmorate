@@ -1,7 +1,6 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import jakarta.validation.Valid;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -11,11 +10,13 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.yandex.practicum.filmorate.exceptions.ValidationException;
+import ru.yandex.practicum.filmorate.exceptions.IdNotFoundException;
+import ru.yandex.practicum.filmorate.exceptions.ObjectAlreadyExistsException;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Map;
 
 import static java.util.Objects.isNull;
 
@@ -23,8 +24,7 @@ import static java.util.Objects.isNull;
 @RestController
 @RequestMapping("/users")
 public class UserController {
-    @Getter
-    private final HashMap<Integer, User> users = new HashMap<>();
+    private final Map<Integer, User> users = new HashMap<>();
     private int count = 0;
 
     @GetMapping
@@ -36,8 +36,7 @@ public class UserController {
     public ResponseEntity<User> addUser(@Valid @RequestBody User user) {
         setName(user);
         if (notUnique(user)) {
-            log.info("User is not added: {} because User already exists", user);
-            throw new ValidationException("User already exists");
+            throw new ObjectAlreadyExistsException("User already exists", user);
         }
         int id = getNextId();
         user.setId(id);
@@ -46,19 +45,16 @@ public class UserController {
         return new ResponseEntity<>(user, HttpStatusCode.valueOf(201));
     }
 
-
     @PutMapping
     public ResponseEntity<User> updateUser(@Valid @RequestBody User user) {
         setName(user);
         int id = user.getId();
-        if (users.containsKey(id)) {
-            users.put(id, user);
-            log.info("User updated: {}", user);
-            return new ResponseEntity<>(user, HttpStatusCode.valueOf(200));
-        } else {
-            log.info("User is not updated: because id={} not found ", user.getId());
-            return new ResponseEntity<>(user, HttpStatusCode.valueOf(404));
+        if (!users.containsKey(id)) {
+            throw new IdNotFoundException(String.format("User with id=%d is not found", user.getId()));
         }
+        users.put(id, user);
+        log.info("User updated: {}", user);
+        return new ResponseEntity<>(user, HttpStatusCode.valueOf(200));
     }
 
     private boolean notUnique(User user) {
@@ -75,5 +71,4 @@ public class UserController {
     private int getNextId() {
         return ++count;
     }
-
 }

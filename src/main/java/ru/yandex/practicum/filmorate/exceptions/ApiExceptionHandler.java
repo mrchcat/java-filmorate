@@ -26,4 +26,27 @@ public class ApiExceptionHandler {
         });
         return errors;
     }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(IdNotFoundException.class)
+    public  Map<String, String> handleIdNotFoundExceptions(IdNotFoundException ex) {
+        log.info(ex.getMessage());
+        Map<String, String> errors = new HashMap<>();
+        String fieldName = "error";
+        String errorMessage = ex.getMessage();
+        errors.put(fieldName, errorMessage);
+        return errors;
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(ObjectAlreadyExistsException.class)
+    public  Map<String, String> handleObjectAlreadyExistsException(ObjectAlreadyExistsException ex) {
+        log.info("{}: {}", ex.getMessage(), ex.getObject());
+        Map<String, String> errors = new HashMap<>();
+        String fieldName = "error";
+        String errorMessage = ex.getMessage();
+        errors.put(fieldName, errorMessage);
+        return errors;
+    }
+
 }
