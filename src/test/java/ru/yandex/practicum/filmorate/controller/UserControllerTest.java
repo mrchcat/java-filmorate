@@ -119,6 +119,6 @@ class UserControllerTest {
         userController.addUser(user);
         User user2 = User.builder()
                 .id(100).email("sdd@dsd.fs").login("upLogin").name("upName").birthday(birthday).build();
-        assertThrows(IdNotFoundException.class,()->userController.updateUser(user2));
+        assertThrows(IdNotFoundException.class, () -> userController.updateUser(user2));
     }
 }
