@@ -17,7 +17,7 @@ import java.time.LocalDate;
 @Getter
 @Builder
 @ToString
-@EqualsAndHashCode(exclude = {"id", "login", "name", "birthday"})
+@EqualsAndHashCode(exclude = {"id"})
 public class User {
     private int id;
     @NotNull (message = "email is mandatory")
