@@ -41,6 +41,7 @@ public class Film {
 
     public boolean addLikeFromUser(Integer userId) {
         if (!likedUsers.contains(userId)) {
+            likedUsers.add(userId);
             likes.incrementAndGet();
             return true;
         }
@@ -49,6 +50,7 @@ public class Film {
 
     public boolean removeLikeFromUser(Integer userId) {
         if (likedUsers.contains(userId)) {
+            likedUsers.remove(userId);
             likes.decrementAndGet();
             return true;
         }
