@@ -12,9 +12,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @Component
 @Primary
-public class InMemoryFilmStorage implements FilmStorage{
+public class InMemoryFilmStorage implements FilmStorage {
     private final Map<Integer, Film> films = new ConcurrentHashMap<>();
-    private final AtomicInteger count=new AtomicInteger(0);
+    private final AtomicInteger count = new AtomicInteger(0);
 
 
     @Override
@@ -44,13 +44,13 @@ public class InMemoryFilmStorage implements FilmStorage{
     public Film addFilm(Film film) {
         int id = getNextId();
         film.setId(id);
-        films.put(id,film);
+        films.put(id, film);
         return film;
     }
 
     @Override
     public Film updateFilm(Film film) {
-        films.put(film.getId(),film);
+        films.put(film.getId(), film);
         return film;
     }
 

@@ -17,11 +17,12 @@ import static java.util.Objects.isNull;
 @Service
 @RequiredArgsConstructor
 public class FilmService {
-    @Value("${filmorate.filmservice.count}") private int count_by_default;
+    @Value("${filmorate.filmservice.count}")
+    private int countByDefault;
     private final FilmStorage filmStorage;
     private final UserService userService;
 
-    public int getFilmLikes(Integer filmId){
+    public int getFilmLikes(Integer filmId) {
         throwIfFilmNotPresent(filmId);
         return filmStorage.getFilmLikes(filmId);
     }
@@ -30,7 +31,7 @@ public class FilmService {
     public void addLikeToFilm(Integer filmId, Integer userId) {
         throwIfFilmNotPresent(filmId);
         userService.throwIfUserNotPresent(userId);
-        if(filmStorage.addUserLikeToFilm(filmId,userId)){
+        if (filmStorage.addUserLikeToFilm(filmId, userId)) {
             log.info("Like added by user={} to film={}", userId, filmId);
         }
     }
@@ -38,14 +39,14 @@ public class FilmService {
     public void deleteLikeFromFilm(Integer filmId, Integer userId) {
         throwIfFilmNotPresent(filmId);
         userService.throwIfUserNotPresent(userId);
-        if(filmStorage.deleteUserLikeFromFilm(filmId,userId)){
+        if (filmStorage.deleteUserLikeFromFilm(filmId, userId)) {
             log.info("Like removed by user={} from film={}", userId, filmId);
         }
     }
 
     public Collection<Film> getMostPopularFilms(Integer count) {
-        if(isNull(count)||(count <= 0)){
-            count = count_by_default;
+        if (isNull(count) || (count <= 0)) {
+            count = countByDefault;
         }
         return filmStorage.getMostPopularFilms(count);
     }

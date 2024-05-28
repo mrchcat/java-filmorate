@@ -32,14 +32,14 @@ public class UserController {
 
     @GetMapping("/{id}/friends")
     @ResponseStatus(HttpStatus.OK)
-    public Collection<User> getAllFriends(@PathVariable @NotNull @PositiveOrZero Integer id){
+    public Collection<User> getAllFriends(@PathVariable @NotNull @PositiveOrZero Integer id) {
         return userService.getAllFriends(id);
     }
 
     @GetMapping("/{id}/friends/common/{otherId}")
     @ResponseStatus(HttpStatus.OK)
     public Collection<User> getMutualFriends(@PathVariable @NotNull @PositiveOrZero Integer id,
-                                             @PathVariable @NotNull @PositiveOrZero Integer otherId){
+                                             @PathVariable @NotNull @PositiveOrZero Integer otherId) {
         return userService.getMutualFriends(id, otherId);
     }
 
@@ -58,14 +58,14 @@ public class UserController {
     @PutMapping("/{id}/friends/{friendId}")
     @ResponseStatus(HttpStatus.OK)
     public void addUserToFriends(@PathVariable @NotNull @PositiveOrZero Integer id,
-                                 @PathVariable @NotNull @PositiveOrZero Integer friendId){
+                                 @PathVariable @NotNull @PositiveOrZero Integer friendId) {
         userService.addFriend(id, friendId);
     }
 
     @DeleteMapping("/{id}/friends/{friendId}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteFriend(@PathVariable @NotNull @PositiveOrZero Integer id,
-                             @PathVariable @NotNull @PositiveOrZero Integer friendId){
+                             @PathVariable @NotNull @PositiveOrZero Integer friendId) {
         userService.deleteFriend(id, friendId);
     }
 }

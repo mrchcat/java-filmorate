@@ -13,21 +13,21 @@ public class ExceptionHandler {
     @org.springframework.web.bind.annotation.ExceptionHandler(MethodArgumentNotValidException.class)
     public ErrorResponse handleValidationExceptions(MethodArgumentNotValidException ex) {
         log.info(ex.getMessage());
-        return new ErrorResponse(ex.getMessage(),null );
+        return new ErrorResponse(ex.getMessage(), null);
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @org.springframework.web.bind.annotation.ExceptionHandler(IdNotFoundException.class)
-    public  ErrorResponse handleIdNotFoundExceptions(IdNotFoundException ex) {
+    public ErrorResponse handleIdNotFoundExceptions(IdNotFoundException ex) {
         log.info(ex.getMessage());
-        return new ErrorResponse(ex.getMessage(),null );
+        return new ErrorResponse(ex.getMessage(), null);
     }
 
     @ResponseStatus(HttpStatus.CONFLICT)
     @org.springframework.web.bind.annotation.ExceptionHandler(ObjectAlreadyExistsException.class)
-    public  ErrorResponse handleObjectAlreadyExistsException(ObjectAlreadyExistsException ex) {
+    public ErrorResponse handleObjectAlreadyExistsException(ObjectAlreadyExistsException ex) {
         log.info("{}: {}", ex.getMessage(), ex.getObject());
-        return new ErrorResponse(ex.getMessage(),null );
+        return new ErrorResponse(ex.getMessage(), null);
     }
 
 }
