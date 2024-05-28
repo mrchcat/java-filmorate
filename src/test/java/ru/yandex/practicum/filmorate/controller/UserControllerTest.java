@@ -77,7 +77,7 @@ class UserControllerTest {
         return Stream.of(
                 Arguments.of(user(u -> u.setLogin(" dd  dfd"))),
                 Arguments.of(user(u -> u.setEmail("sssss"))),
-                Arguments.of(user(u -> u.setBirthday(LocalDate.of(3333,1,1))))
+                Arguments.of(user(u -> u.setBirthday(LocalDate.of(3333, 1, 1))))
         );
     }
 
@@ -86,7 +86,7 @@ class UserControllerTest {
                 .email("sss@sss.ru")
                 .login("ssss")
                 .name("film")
-                .birthday(LocalDate.of(2000,1,1))
+                .birthday(LocalDate.of(2000, 1, 1))
                 .build();
     }
 

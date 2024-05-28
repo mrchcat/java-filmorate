@@ -19,23 +19,23 @@ class UserServiceTest {
     UserService userService;
 
     @BeforeEach
-    void initService(){
-        userService=new UserService(userStorage);
+    void initService() {
+        userService = new UserService(userStorage);
     }
 
     @Test
     @DisplayName("add friend to the same user")
-    void testAddFriendToSame(){
-        int userId=1;
+    void testAddFriendToSame() {
+        int userId = 1;
         Mockito.when(userStorage.containsId(userId)).thenReturn(true);
-        assertThrows(ObjectAlreadyExistsException.class, ()-> userService.addFriend(userId,userId));
+        assertThrows(ObjectAlreadyExistsException.class, () -> userService.addFriend(userId, userId));
     }
 
     @Test
     @DisplayName("add friend to different users")
-    void testAddFriendToDifferent(){
-        int userId1=1;
-        int userId2=2;
+    void testAddFriendToDifferent() {
+        int userId1 = 1;
+        int userId2 = 2;
         Mockito.when(userStorage.containsId(userId1)).thenReturn(true);
         Mockito.when(userStorage.containsId(userId2)).thenReturn(true);
         userService.addFriend(userId1, userId2);
