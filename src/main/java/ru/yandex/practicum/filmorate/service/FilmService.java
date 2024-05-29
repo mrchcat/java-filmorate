@@ -15,18 +15,12 @@ import static java.util.Objects.isNull;
 
 @Slf4j
 @Service
-//@RequiredArgsConstructor
+@RequiredArgsConstructor
 public class FilmService {
     @Value("${filmorate.filmservice.count}")
     private int countByDefault;
     private final FilmStorage filmStorage;
     private final UserService userService;
-
-    public FilmService(FilmStorage filmStorage, UserService userService) {
-        this.filmStorage = filmStorage;
-        this.userService = userService;
-        System.out.println("constructor");
-    }
 
     public int getFilmLikes(Integer filmId) {
         throwIfFilmNotPresent(filmId);
