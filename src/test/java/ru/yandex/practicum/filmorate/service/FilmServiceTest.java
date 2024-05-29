@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -18,12 +19,8 @@ class FilmServiceTest {
     FilmStorage filmStorage;
     @Mock
     UserService userService;
+    @InjectMocks
     FilmService filmService;
-
-    @BeforeEach
-    void initService() {
-        filmService = new FilmService(filmStorage, userService);
-    }
 
     @Test
     @DisplayName("get likes from bad film ")

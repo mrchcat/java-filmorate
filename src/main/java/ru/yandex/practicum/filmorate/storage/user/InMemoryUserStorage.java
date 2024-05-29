@@ -36,6 +36,7 @@ public class InMemoryUserStorage implements UserStorage {
         friends.get(offerId).add(acceptId);
     }
 
+
     @Override
     public void deleteFriend(Integer offerId, Integer toDeleteId) {
         if (!friends.containsKey(offerId) || !friends.get(offerId).contains(toDeleteId)) {
@@ -64,7 +65,6 @@ public class InMemoryUserStorage implements UserStorage {
 
     @Override
     public Collection<User> getMutualFriends(Integer id, Integer otherId) {
-        System.out.println("Внутри getMutualFriends");
         if (!friends.containsKey(id) || !friends.containsKey(otherId)) {
             return Collections.emptyList();
         }
