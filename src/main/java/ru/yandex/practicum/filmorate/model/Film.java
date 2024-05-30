@@ -12,6 +12,9 @@ import org.hibernate.validator.constraints.Length;
 import ru.yandex.practicum.filmorate.annotations.AfterCinemaEra;
 
 import java.time.LocalDate;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Setter
 @Getter
@@ -29,4 +32,28 @@ public class Film {
     private LocalDate releaseDate;
     @Positive(message = "duration must be positive integer")
     private int duration;
+    private final Set<Integer> likedUsers = ConcurrentHashMap.newKeySet();
+    private final AtomicInteger likes = new AtomicInteger(0);
+
+    public int getLikes() {
+        return likes.get();
+    }
+
+    public boolean addLikeFromUser(Integer userId) {
+        if (!likedUsers.contains(userId)) {
+            likedUsers.add(userId);
+            likes.incrementAndGet();
+            return true;
+        }
+        return false;
+    }
+
+    public boolean removeLikeFromUser(Integer userId) {
+        if (likedUsers.contains(userId)) {
+            likedUsers.remove(userId);
+            likes.decrementAndGet();
+            return true;
+        }
+        return false;
+    }
 }

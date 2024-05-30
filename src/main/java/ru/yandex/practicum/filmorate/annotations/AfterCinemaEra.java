@@ -16,6 +16,8 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Retention(RUNTIME)
 public @interface AfterCinemaEra {
     String message() default "Date must be after 1895-12-28";
+
     Class<?>[] groups() default {};
+
     Class<? extends Payload>[] payload() default {};
 }

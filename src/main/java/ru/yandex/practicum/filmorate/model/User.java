@@ -20,15 +20,15 @@ import java.time.LocalDate;
 @EqualsAndHashCode(exclude = {"id"})
 public class User {
     private int id;
-    @NotNull (message = "email is mandatory")
-    @Email (message = "email is not valid ")
+    @NotNull(message = "email is mandatory")
+    @Email(message = "email is not valid ")
     private String email;
     @NotBlank(message = "login is mandatory")
-    @Pattern(regexp = "[^\\s]*",message = "login can't have spaces")
+    @Pattern(regexp = "[^\\s]*", message = "login can't have spaces")
     private String login;
     private String name;
-    @NotNull (message = "birthday is mandatory")
-    @Past (message = "birthday can not be in the future")
+    @NotNull(message = "birthday is mandatory")
+    @Past(message = "birthday can not be in the future")
     private LocalDate birthday;
 }
 

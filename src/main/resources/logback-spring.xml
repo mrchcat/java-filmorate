@@ -1,5 +1,5 @@
 <configuration>
-    <property name="LOG_FILE" value="log" />
+    <property name="LOG_FILE" value="log"/>
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <file></file>
@@ -18,14 +18,18 @@
         </encoder>
     </appender>
 
-    <logger name="ru.yandex.practicum.filmorate.controller" level="INFO" additivity="true" >
-        <appender-ref ref="FILE" />
+    <logger name="ru.yandex.practicum.filmorate.service" level="INFO" additivity="true">
+        <appender-ref ref="FILE"/>
         <appender-ref ref="STDOUT"/>
     </logger>
 
-    <logger name="ru.yandex.practicum.filmorate.exceptions" level="INFO" additivity="true" >
-        <appender-ref ref="FILE" />
+    <logger name="ru.yandex.practicum.filmorate.exception" level="INFO" additivity="true">
+        <appender-ref ref="FILE"/>
         <appender-ref ref="STDOUT"/>
     </logger>
+
+    <root level="INFO">
+        <appender-ref ref="STDOUT"/>
+    </root>
 
 </configuration>

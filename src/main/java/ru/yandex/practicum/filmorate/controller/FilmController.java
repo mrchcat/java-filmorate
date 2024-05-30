@@ -1,63 +1,74 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import jakarta.validation.Valid;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ResponseEntity;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import ru.yandex.practicum.filmorate.exceptions.IdNotFoundException;
-import ru.yandex.practicum.filmorate.exceptions.ObjectAlreadyExistsException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.service.FilmService;
 
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
-@Slf4j
 @RestController
 @RequestMapping("/films")
+@RequiredArgsConstructor
 public class FilmController {
-    private final Map<Integer, Film> films = new HashMap<>();
-    private int count = 0;
+    private final FilmService filmService;
 
     @GetMapping
+    @ResponseStatus(HttpStatus.OK)
     public Collection<Film> getAllFilms() {
-        return films.values();
+        return filmService.getAllFilms();
     }
 
+    @GetMapping("/popular")
+    @ResponseStatus(HttpStatus.OK)
+    public Collection<Film> getMostPopularFilms(@RequestParam(required = false) @PositiveOrZero Integer count) {
+        return filmService.getMostPopularFilms(count);
+    }
+
+    @GetMapping("/{id}/like")
+    @ResponseStatus(HttpStatus.OK)
+    public int getFilmLikes(@PathVariable @NotNull @PositiveOrZero Integer id) {
+        return filmService.getFilmLikes(id);
+    }
+
+
     @PostMapping
-    public ResponseEntity<Film> addFilm(@Valid @RequestBody Film film) {
-        if (notUnique(film)) {
-            throw new ObjectAlreadyExistsException("Film already exists", film);
-        }
-        int id = getNextId();
-        film.setId(id);
-        films.put(id, film);
-        log.info("Film added: {}", film);
-        return new ResponseEntity<>(film, HttpStatusCode.valueOf(201));
+    @ResponseStatus(HttpStatus.CREATED)
+    public Film addFilm(@Valid @RequestBody Film film) {
+        return filmService.addFilm(film);
     }
 
     @PutMapping
-    public ResponseEntity<Film> updateFilm(@Valid @RequestBody Film film) {
-        int id = film.getId();
-        if (!films.containsKey(id)) {
-            throw new IdNotFoundException(String.format("Film with id=%d is not found", film.getId()));
-        }
-        films.put(id, film);
-        log.info("Film is updated: {}", film);
-        return new ResponseEntity<>(film, HttpStatusCode.valueOf(200));
+    @ResponseStatus(HttpStatus.OK)
+    public Film updateFilm(@Valid @RequestBody Film film) {
+        return filmService.updateFilm(film);
     }
 
-    private boolean notUnique(Film film) {
-        return films.containsValue(film);
+    @PutMapping("/{id}/like/{userId}")
+    @ResponseStatus(HttpStatus.OK)
+    public void addLikeToFilm(@PathVariable("id") @NotNull @PositiveOrZero Integer filmId,
+                              @PathVariable @NotNull @PositiveOrZero Integer userId) {
+        filmService.addLikeToFilm(filmId, userId);
     }
 
-    private int getNextId() {
-        return ++count;
+    @DeleteMapping("/{id}/like/{userId}")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteLikeFromFilm(@PathVariable("id") @NotNull @PositiveOrZero Integer filmId,
+                                   @PathVariable @NotNull @PositiveOrZero Integer userId) {
+        filmService.deleteLikeFromFilm(filmId, userId);
     }
+
 }
