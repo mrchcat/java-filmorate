@@ -1,0 +1,14 @@
+filmorate:
+  filmservice:
+    count: 10
+
+logging:
+  level:
+    org.zalando.logbook: TRACE
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5470/filmorate
+    username: mcat
+    password: Inushing1980
+    driver-class-name: org.postgresql.Driver
