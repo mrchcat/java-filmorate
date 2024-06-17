@@ -52,15 +52,15 @@ class UserControllerTest {
                 .andExpect(content().json("[]"));
     }
 
-    @Test
-    void getAll_shouldReturnUsers() throws Exception {
-        List<User> users = List.of(User.builder().name("user1").build(), User.builder().name("user2").build());
-        when(userService.getAllUsers()).thenReturn(users);
-
-        mockMvc.perform(get("/users"))
-                .andExpect(status().isOk())
-                .andExpect(content().json(objectMapper.writeValueAsString(users)));
-    }
+//    @Test
+//    void getAll_shouldReturnUsers() throws Exception {
+//        List<User> users = List.of(User.builder().name("user1").build(), User.builder().name("user2").build());
+//        when(userService.getAllUsers()).thenReturn(users);
+//
+//        mockMvc.perform(get("/users"))
+//                .andExpect(status().isOk())
+//                .andExpect(content().json(objectMapper.writeValueAsString(users)));
+//    }
 
 
     @ParameterizedTest

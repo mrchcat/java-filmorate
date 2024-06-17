@@ -6,7 +6,6 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Pattern;
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -17,9 +16,8 @@ import java.time.LocalDate;
 @Getter
 @Builder
 @ToString
-@EqualsAndHashCode(exclude = {"id"})
 public class User {
-    private int id;
+    private Integer id;
     @NotNull(message = "email is mandatory")
     @Email(message = "email is not valid ")
     private String email;

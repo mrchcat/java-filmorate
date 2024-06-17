@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.storage.user;
+package ru.yandex.practicum.filmorate.repository.user;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -10,7 +10,7 @@ import java.util.Collection;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class InMemoryUserStorageTest {
+class InMemoryUserRepositoryTest {
     InMemoryUserStorage inMemoryUserStorage;
 
     @BeforeEach
@@ -45,10 +45,10 @@ class InMemoryUserStorageTest {
         User user3 = inMemoryUserStorage.addUser(User.builder().name("user3").build());
         User user4 = inMemoryUserStorage.addUser(User.builder().name("user4").build());
         User user5 = inMemoryUserStorage.addUser(User.builder().name("user5").build());
-        inMemoryUserStorage.addFriend(user1.getId(), user2.getId());
-        inMemoryUserStorage.addFriend(user1.getId(), user2.getId());
+        inMemoryUserStorage.requestFriendship(user1.getId(), user2.getId());
+        inMemoryUserStorage.requestFriendship(user1.getId(), user2.getId());
         assertEquals(1, inMemoryUserStorage.getAllFriends(user1.getId()).size());
-        inMemoryUserStorage.addFriend(user1.getId(), user3.getId());
+        inMemoryUserStorage.requestFriendship(user1.getId(), user3.getId());
         assertEquals(2, inMemoryUserStorage.getAllFriends(user1.getId()).size());
         assertEquals(1, inMemoryUserStorage.getAllFriends(user2.getId()).size());
         assertEquals(1, inMemoryUserStorage.getAllFriends(user3.getId()).size());
@@ -63,11 +63,11 @@ class InMemoryUserStorageTest {
         User user3 = inMemoryUserStorage.addUser(User.builder().name("user3").build());
         User user4 = inMemoryUserStorage.addUser(User.builder().name("user4").build());
         User user5 = inMemoryUserStorage.addUser(User.builder().name("user5").build());
-        inMemoryUserStorage.addFriend(user1.getId(), user2.getId());
-        inMemoryUserStorage.addFriend(user1.getId(), user3.getId());
-        inMemoryUserStorage.addFriend(user4.getId(), user2.getId());
-        inMemoryUserStorage.addFriend(user4.getId(), user3.getId());
-        inMemoryUserStorage.addFriend(user4.getId(), user5.getId());
+        inMemoryUserStorage.requestFriendship(user1.getId(), user2.getId());
+        inMemoryUserStorage.requestFriendship(user1.getId(), user3.getId());
+        inMemoryUserStorage.requestFriendship(user4.getId(), user2.getId());
+        inMemoryUserStorage.requestFriendship(user4.getId(), user3.getId());
+        inMemoryUserStorage.requestFriendship(user4.getId(), user5.getId());
         Collection<User> mutual = inMemoryUserStorage.getMutualFriends(user1.getId(), user4.getId());
         assertEquals(2, mutual.size());
         assertTrue(mutual.contains(user2));

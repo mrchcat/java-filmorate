@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import ru.yandex.practicum.filmorate.dto.UserDTO;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
 
@@ -26,46 +27,47 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping
-    public Collection<User> getAllUsers() {
+    public Collection<UserDTO> getAllUsers() {
         return userService.getAllUsers();
-    }
-
-    @GetMapping("/{id}/friends")
-    @ResponseStatus(HttpStatus.OK)
-    public Collection<User> getAllFriends(@PathVariable @NotNull @PositiveOrZero Integer id) {
-        return userService.getAllFriends(id);
-    }
-
-    @GetMapping("/{id}/friends/common/{otherId}")
-    @ResponseStatus(HttpStatus.OK)
-    public Collection<User> getMutualFriends(@PathVariable @NotNull @PositiveOrZero Integer id,
-                                             @PathVariable @NotNull @PositiveOrZero Integer otherId) {
-        return userService.getMutualFriends(id, otherId);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public User addUser(@Valid @RequestBody User user) {
+    public UserDTO addUser(@Valid @RequestBody User user) {
         return userService.addUser(user);
     }
 
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
-    public User updateUser(@Valid @RequestBody User user) {
+    public UserDTO updateUser(@Valid @RequestBody User user) {
         return userService.updateUser(user);
     }
 
     @PutMapping("/{id}/friends/{friendId}")
     @ResponseStatus(HttpStatus.OK)
-    public void addUserToFriends(@PathVariable @NotNull @PositiveOrZero Integer id,
-                                 @PathVariable @NotNull @PositiveOrZero Integer friendId) {
-        userService.addFriend(id, friendId);
+    public void sendRequestForFriendship(@PathVariable @NotNull @PositiveOrZero Integer id,
+                                        @PathVariable @NotNull @PositiveOrZero Integer friendId) {
+        userService.sendRequestForFriendship(id, friendId);
     }
 
     @DeleteMapping("/{id}/friends/{friendId}")
     @ResponseStatus(HttpStatus.OK)
-    public void deleteFriend(@PathVariable @NotNull @PositiveOrZero Integer id,
+    public void recallRequestForFriendship(@PathVariable @NotNull @PositiveOrZero Integer id,
                              @PathVariable @NotNull @PositiveOrZero Integer friendId) {
-        userService.deleteFriend(id, friendId);
+        userService.recallRequestForFriendship(id, friendId);
     }
+
+    @GetMapping("/{id}/friends")
+    @ResponseStatus(HttpStatus.OK)
+    public Collection<UserDTO> getAllFriends(@PathVariable @NotNull @PositiveOrZero Integer id) {
+        return userService.getAllFriends(id);
+    }
+
+    @GetMapping("/{id}/friends/common/{otherId}")
+    @ResponseStatus(HttpStatus.OK)
+    public Collection<UserDTO> getMutualFriends(@PathVariable @NotNull @PositiveOrZero Integer id,
+                                             @PathVariable @NotNull @PositiveOrZero Integer otherId) {
+        return userService.getMutualFriends(id, otherId);
+    }
+
 }
