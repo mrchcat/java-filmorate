@@ -1,6 +1,5 @@
 package ru.yandex.practicum.filmorate.service;
 
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -41,7 +40,6 @@ public class FilmService {
         return filmRepository.getFilmLikes(filmId);
     }
 
-
     public void addLikeToFilm(Integer filmId, Integer userId) {
         throwIfFilmNotPresent(filmId);
         userService.throwIfUserNotPresent(userId);
@@ -69,15 +67,14 @@ public class FilmService {
 
     public Collection<FilmDTO> getAllFilms() {
         return filmRepository.getAllFilms().stream()
-                .map(filmMapper::FilmToDTO)
+                .map(filmMapper::filmToDTO)
                 .toList();
     }
 
     public FilmDTO getFilmById(int filmId) {
         throwIfFilmNotPresent(filmId);
-        return filmMapper.FilmToDTO(filmRepository.getFilmById(filmId));
+        return filmMapper.filmToDTO(filmRepository.getFilmById(filmId));
     }
-
 
     public FilmDTO addFilm(NewFilmRequestDTO dto) {
         throwIfMPARatingNotPresent(dto.getMpa().getId());
@@ -85,7 +82,7 @@ public class FilmService {
         Film film = FilmMapper.newFilmRequestToFilm(dto);
         Film newFilm = filmRepository.addFilm(film);
         log.info("Film added: {}", newFilm);
-        return filmMapper.FilmToDTO(film);
+        return filmMapper.filmToDTO(film);
     }
 
     public FilmDTO updateFilm(UpdateFilmRequestDTO dto) {
@@ -95,7 +92,7 @@ public class FilmService {
         Film film = FilmMapper.updateFilmRequestDTOToFilm(dto);
         filmRepository.updateFilm(film);
         log.info("Film updated: {}", film);
-        return filmMapper.FilmToDTO(film);
+        return filmMapper.filmToDTO(film);
     }
 
     private void throwIfFilmNotPresent(Integer filmId) {
@@ -111,7 +108,7 @@ public class FilmService {
     }
 
     private void throwIfGenresNotPresent(List<Genre> genres) {
-        if(genres==null){
+        if (genres == null) {
             return;
         }
         boolean isAllGenreIdPresent = genres.stream()

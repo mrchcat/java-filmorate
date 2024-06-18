@@ -20,14 +20,14 @@ public class GenreController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public Collection<GenreDTO> getAllGenres(){
+    public Collection<GenreDTO> getAllGenres() {
         return genreService.getAllGenres();
     }
 
     @GetMapping("/{genreId}")
     @ResponseStatus(HttpStatus.OK)
-    public GenreDTO getGenreById(@PathVariable("genreId") int genreId){
-        return  genreService.getGenreById(genreId);
+    public GenreDTO getGenreById(@PathVariable("genreId") int genreId) {
+        return genreService.getGenreById(genreId);
     }
 
 }

@@ -25,6 +25,6 @@ public class RatingDBRepository extends BaseRepository<Rating> implements Rating
 
     @Override
     public Optional<Rating> getRatingById(int ratingId) {
-        return findOne(FIND_BY_ID_QUERY,ratingId);
+        return findOne(FIND_BY_ID_QUERY, ratingId);
     }
 }

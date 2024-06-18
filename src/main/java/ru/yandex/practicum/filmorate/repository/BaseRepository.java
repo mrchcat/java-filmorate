@@ -64,12 +64,11 @@ public class BaseRepository<T> {
             }
             return ps;
         }, keyHolder);
-        var keys= keyHolder.getKeyList();
+        var keys = keyHolder.getKeyList();
         if (keys.isEmpty()) {
             throw new InternalServerException("Data was not saved!");
         }
     }
-
 
 
     protected void update(String query, Object... params) {

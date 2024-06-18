@@ -14,26 +14,24 @@ import ru.yandex.practicum.filmorate.model.Rating;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 @Getter
 @Setter
 @Builder
 @ToString
 public class UpdateFilmRequestDTO {
-        @Positive(message = "id must be positive")
-        private Integer id;
-        @NotBlank(message = "name is mandatory")
-        private String name;
-        @NotNull(message = "description is mandatory")
-        @Length(max = 200, message = "description must be less than 200 digits")
-        private String description;
-        @AfterCinemaEra(message = "release date is too early")
-        private LocalDate releaseDate;
-        @Positive(message = "duration must be positive integer")
-        private int duration;
-        @NotNull(message = "mpa rating is mandatory")
-        private Rating mpa;
-//        @NotNull(message = "genres are mandatory")
-        private List<Genre> genres;
+    @Positive(message = "id must be positive")
+    private Integer id;
+    @NotBlank(message = "name is mandatory")
+    private String name;
+    @NotNull(message = "description is mandatory")
+    @Length(max = 200, message = "description must be less than 200 digits")
+    private String description;
+    @AfterCinemaEra(message = "release date is too early")
+    private LocalDate releaseDate;
+    @Positive(message = "duration must be positive integer")
+    private int duration;
+    @NotNull(message = "mpa rating is mandatory")
+    private Rating mpa;
+    private List<Genre> genres;
 }

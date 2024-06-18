@@ -7,7 +7,7 @@ import ru.yandex.practicum.filmorate.model.Rating;
 @Component
 public class RatingMapper {
 
-    public static RatingDTO RatingToDTO(Rating rating){
+    public static RatingDTO ratingToDTO(Rating rating) {
         return RatingDTO.builder()
                 .id(rating.getId())
                 .name(rating.getName())

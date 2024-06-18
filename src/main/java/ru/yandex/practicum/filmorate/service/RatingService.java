@@ -14,19 +14,18 @@ import java.util.Collection;
 public class RatingService {
     private final RatingRepository ratingRepository;
 
-    public Collection<RatingDTO> getAllRatings(){
+    public Collection<RatingDTO> getAllRatings() {
         return ratingRepository
                 .getAllRatings()
                 .stream()
-                .map(RatingMapper::RatingToDTO)
+                .map(RatingMapper::ratingToDTO)
                 .toList();
     }
 
-    public RatingDTO getRatingById(int ratingId){
+    public RatingDTO getRatingById(int ratingId) {
         return ratingRepository
                 .getRatingById(ratingId)
-                .map(RatingMapper::RatingToDTO)
-                .orElseThrow(()->new IdNotFoundException("MPA rating with id="+ratingId+" is not found"));
+                .map(RatingMapper::ratingToDTO)
+                .orElseThrow(() -> new IdNotFoundException("MPA rating with id=" + ratingId + " is not found"));
     }
-
 }

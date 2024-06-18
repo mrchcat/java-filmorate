@@ -14,18 +14,18 @@ import java.util.Collection;
 public class GenreService {
     private final GenreRepository genreRepository;
 
-    public Collection<GenreDTO> getAllGenres(){
+    public Collection<GenreDTO> getAllGenres() {
         return genreRepository
                 .getAllGenres()
                 .stream()
-                .map(GenreMapper::GenreToDTO)
+                .map(GenreMapper::genreToDTO)
                 .toList();
     }
 
-    public GenreDTO getGenreById(int genreId){
+    public GenreDTO getGenreById(int genreId) {
         return genreRepository
                 .getGenreById(genreId)
-                .map(GenreMapper::GenreToDTO)
-                .orElseThrow(()->new IdNotFoundException("Genre with id="+genreId+" is not found"));
+                .map(GenreMapper::genreToDTO)
+                .orElseThrow(() -> new IdNotFoundException("Genre with id=" + genreId + " is not found"));
     }
 }

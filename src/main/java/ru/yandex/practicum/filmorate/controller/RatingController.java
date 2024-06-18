@@ -21,13 +21,13 @@ public class RatingController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public Collection<RatingDTO> getAllMPARatings(){
+    public Collection<RatingDTO> getAllMPARatings() {
         return ratingService.getAllRatings();
     }
 
     @GetMapping("/{ratingId}")
     @ResponseStatus(HttpStatus.OK)
-    public RatingDTO getGenreById(@PathVariable("ratingId") int ratingId){
-        return  ratingService.getRatingById(ratingId);
+    public RatingDTO getGenreById(@PathVariable("ratingId") int ratingId) {
+        return ratingService.getRatingById(ratingId);
     }
 }

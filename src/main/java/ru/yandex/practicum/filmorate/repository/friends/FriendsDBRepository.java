@@ -5,14 +5,19 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import ru.yandex.practicum.filmorate.exception.InternalServerException;
+import ru.yandex.practicum.filmorate.exception.ObjectAlreadyExistsException;
 import ru.yandex.practicum.filmorate.model.Friends;
 import ru.yandex.practicum.filmorate.model.FriendshipStatus;
 import ru.yandex.practicum.filmorate.repository.BaseRepository;
 
 import java.util.Optional;
 
+import static org.springframework.transaction.annotation.Isolation.REPEATABLE_READ;
 import static ru.yandex.practicum.filmorate.model.FriendshipStatus.ABSENT;
+import static ru.yandex.practicum.filmorate.model.FriendshipStatus.CONFIRMED;
+import static ru.yandex.practicum.filmorate.model.FriendshipStatus.REQUESTED;
 import static ru.yandex.practicum.filmorate.model.FriendshipStatus.UNKNOWN;
 
 @Repository
@@ -68,6 +73,42 @@ public class FriendsDBRepository extends BaseRepository<Friends> implements Frie
 
     @Override
     public void deleteFriendshipStatus(Integer applicantId, Integer approvingId) {
-        delete(DELETE_FRIENDSHIP_QUERY,applicantId,approvingId);
+        delete(DELETE_FRIENDSHIP_QUERY, applicantId, approvingId);
+    }
+
+    @Transactional(isolation = REPEATABLE_READ)
+    @Override
+    public void sendRequestForFriendship(Integer applicantId, Integer approvingId) {
+        var applicantToApprovingStatus = getFriendshipStatus(applicantId, approvingId);
+        var approvingToApplicantStatus = getFriendshipStatus(approvingId, applicantId);
+
+        if (applicantToApprovingStatus.equals(ABSENT) && approvingToApplicantStatus.equals(ABSENT)) {
+            addFriendshipStatus(applicantId, approvingId, REQUESTED);
+            return;
+        }
+        if (applicantToApprovingStatus.equals(ABSENT) && approvingToApplicantStatus.equals(REQUESTED)) {
+            addFriendshipStatus(applicantId, approvingId, CONFIRMED);
+            setFriendshipStatus(approvingId, applicantId, CONFIRMED);
+            return;
+        }
+        log.info("Repeated request of user={} to user={} for friendship was declined by service",
+                applicantId, approvingId);
+        throw new ObjectAlreadyExistsException("Request for friendship already exists", approvingId);
+    }
+
+    @Transactional(isolation = REPEATABLE_READ)
+    @Override
+    public void recallRequestForFriendship(Integer applicantId, Integer approvingId) {
+        var applicantToApprovingStatus = getFriendshipStatus(applicantId, approvingId);
+        var approvingToApplicantStatus = getFriendshipStatus(approvingId, applicantId);
+        if (applicantToApprovingStatus.equals(ABSENT)) {
+            log.info("User={} can not stop friendship with user={} because it's absent", approvingId, applicantId);
+            return;
+        }
+        deleteFriendshipStatus(applicantId, approvingId);
+        if (approvingToApplicantStatus.equals(CONFIRMED)) {
+            setFriendshipStatus(approvingId, applicantId, REQUESTED);
+        }
+        log.info("User={} stopped friendship with user={}", approvingId, applicantId);
     }
 }

@@ -8,14 +8,13 @@ import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.repository.BaseRepository;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @Repository
 @Primary
-public class GenreDBRepository extends BaseRepository<Genre> implements GenreRepository{
+public class GenreDBRepository extends BaseRepository<Genre> implements GenreRepository {
     private static final String FIND_ALL_QUERY = "SELECT * FROM genre";
     private static final String FIND_BY_ID_QUERY = "SELECT * FROM genre WHERE id = ?";
     private static final String FIND_GENRE_BY_FILM_ID_QUERY =
@@ -31,13 +30,13 @@ public class GenreDBRepository extends BaseRepository<Genre> implements GenreRep
     }
 
     @Override
-    public Optional<Genre> getGenreById(int genreId){
+    public Optional<Genre> getGenreById(int genreId) {
         return findOne(FIND_BY_ID_QUERY, genreId);
     }
 
     @Override
     public Set<Integer> getGenresByFilm(Integer filmId) {
-        return findMany(FIND_GENRE_BY_FILM_ID_QUERY,filmId).stream()
+        return findMany(FIND_GENRE_BY_FILM_ID_QUERY, filmId).stream()
                 .map(Genre::getId)
                 .collect(Collectors.toSet());
     }

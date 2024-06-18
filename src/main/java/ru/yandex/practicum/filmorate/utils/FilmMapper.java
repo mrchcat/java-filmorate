@@ -30,7 +30,7 @@ public class FilmMapper {
         ratingRepository.getAllRatings().forEach(mpaRating -> allRatings.put(mpaRating.getId(), mpaRating));
     }
 
-    public FilmDTO FilmToDTO(Film film) {
+    public FilmDTO filmToDTO(Film film) {
         List<Genre> genres = film
                 .getGenresId()
                 .stream()
@@ -49,14 +49,14 @@ public class FilmMapper {
     }
 
     public static Film newFilmRequestToFilm(NewFilmRequestDTO dto) {
-        List<Genre> genres =dto.getGenres();
-        if(genres==null){
-            genres=Collections.EMPTY_LIST;
+        List<Genre> genres = dto.getGenres();
+        if (genres == null) {
+            genres = Collections.emptyList();
         }
-        Set<Integer> genresId =genres
-                    .stream()
-                    .map(Genre::getId)
-                    .collect(Collectors.toSet());
+        Set<Integer> genresId = genres
+                .stream()
+                .map(Genre::getId)
+                .collect(Collectors.toSet());
 
         return Film.builder()
                 .name(dto.getName())
@@ -69,11 +69,11 @@ public class FilmMapper {
     }
 
     public static Film updateFilmRequestDTOToFilm(UpdateFilmRequestDTO dto) {
-        List<Genre> genres =dto.getGenres();
-        if(genres==null){
-            genres=Collections.EMPTY_LIST;
+        List<Genre> genres = dto.getGenres();
+        if (genres == null) {
+            genres = Collections.emptyList();
         }
-        Set<Integer> genresId =genres
+        Set<Integer> genresId = genres
                 .stream()
                 .map(Genre::getId)
                 .collect(Collectors.toSet());

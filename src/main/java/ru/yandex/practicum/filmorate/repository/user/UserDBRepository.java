@@ -79,11 +79,11 @@ public class UserDBRepository extends BaseRepository<User> implements UserReposi
 
     @Override
     public Collection<User> getAllFriends(Integer userId) {
-        return findMany(GET_ALL_FRIENDS_QUERY,userId);
+        return findMany(GET_ALL_FRIENDS_QUERY, userId);
     }
 
     @Override
     public Collection<User> getMutualFriends(Integer userId, Integer otherId) {
-        return findMany(GET_MUTUAL_FRIENDS_QUERY,userId,otherId);
+        return findMany(GET_MUTUAL_FRIENDS_QUERY, userId, otherId);
     }
 }

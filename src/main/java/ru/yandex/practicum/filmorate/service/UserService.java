@@ -3,7 +3,9 @@ package ru.yandex.practicum.filmorate.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.dto.UserDTO;
+import ru.yandex.practicum.filmorate.dto.user.NewUserRequestDTO;
+import ru.yandex.practicum.filmorate.dto.user.UpdateUserRequestDTO;
+import ru.yandex.practicum.filmorate.dto.user.UserDTO;
 import ru.yandex.practicum.filmorate.exception.IdNotFoundException;
 import ru.yandex.practicum.filmorate.exception.ObjectAlreadyExistsException;
 import ru.yandex.practicum.filmorate.model.User;
@@ -14,9 +16,6 @@ import ru.yandex.practicum.filmorate.utils.UserMapper;
 import java.util.Collection;
 
 import static java.util.Objects.isNull;
-import static ru.yandex.practicum.filmorate.model.FriendshipStatus.ABSENT;
-import static ru.yandex.practicum.filmorate.model.FriendshipStatus.CONFIRMED;
-import static ru.yandex.practicum.filmorate.model.FriendshipStatus.REQUESTED;
 
 @Slf4j
 @Service
@@ -25,29 +24,28 @@ public class UserService {
     private final UserRepository userRepository;
     private final FriendsRepository friendsRepository;
 
-    public UserDTO addUser(User user) {
+    public UserDTO addUser(NewUserRequestDTO dto) {
+        User user = UserMapper.newUserRequestDTOToUser(dto);
         setName(user);
-        if (userRepository.containsUserByValue(user)) {
-            throw new ObjectAlreadyExistsException("User already exists", user);
-        }
         User newUser = userRepository.addUser(user);
         log.info("User added: {}", newUser);
-        return UserMapper.UserToDTO(newUser);
+        return UserMapper.userToDTO(newUser);
     }
 
-    public UserDTO updateUser(User user) {
+    public UserDTO updateUser(UpdateUserRequestDTO dto) {
+        User user = UserMapper.updateUserRequestDTOToUser(dto);
         throwIfUserNotPresent(user);
         setName(user);
         userRepository.updateUser(user);
         log.info("User updated: {}", user);
-        return UserMapper.UserToDTO(user);
+        return UserMapper.userToDTO(user);
     }
 
     public Collection<UserDTO> getAllUsers() {
         return userRepository
                 .getAllUsers()
                 .stream()
-                .map(UserMapper::UserToDTO)
+                .map(UserMapper::userToDTO)
                 .toList();
     }
 
@@ -55,23 +53,7 @@ public class UserService {
         throwIfUserNotPresent(applicantId);
         throwIfUserNotPresent(approvingId);
         throwIfTheSameUsers(applicantId, approvingId);
-        var applicantToApprovingStatus = friendsRepository.getFriendshipStatus(applicantId, approvingId);
-        var approvingToApplicantStatus = friendsRepository.getFriendshipStatus(approvingId, applicantId);
-
-        if (applicantToApprovingStatus.equals(ABSENT)) {
-            if (approvingToApplicantStatus.equals(ABSENT)) {
-                friendsRepository.addFriendshipStatus(applicantId, approvingId, REQUESTED);
-                return;
-            }
-            if (approvingToApplicantStatus.equals(REQUESTED)) {
-                friendsRepository.addFriendshipStatus(applicantId, approvingId, CONFIRMED);
-                friendsRepository.setFriendshipStatus(approvingId, applicantId, CONFIRMED);
-                return;
-            }
-        }
-        log.info("Repeated request of user={} to user={} for friendship was declined by service",
-                applicantId, approvingId);
-        throw new ObjectAlreadyExistsException("Request for friendship already exists", approvingId);
+        friendsRepository.sendRequestForFriendship(applicantId, approvingId);
     }
 
 
@@ -79,15 +61,7 @@ public class UserService {
         throwIfUserNotPresent(applicantId);
         throwIfUserNotPresent(approvingId);
         throwIfTheSameUsers(applicantId, approvingId);
-        var applicantToApprovingStatus = friendsRepository.getFriendshipStatus(applicantId, approvingId);
-        var approvingToApplicantStatus = friendsRepository.getFriendshipStatus(approvingId, applicantId);
-        if (!applicantToApprovingStatus.equals(ABSENT)) {
-            friendsRepository.deleteFriendshipStatus(applicantId, approvingId);
-            if (approvingToApplicantStatus.equals(CONFIRMED)) {
-                friendsRepository.setFriendshipStatus(approvingId, applicantId, REQUESTED);
-            }
-            log.info("User={} stopped friendship with user={}", approvingId, applicantId);
-        }
+        friendsRepository.recallRequestForFriendship(applicantId, approvingId);
     }
 
     public Collection<UserDTO> getAllFriends(Integer userId) {
@@ -95,7 +69,7 @@ public class UserService {
         return userRepository
                 .getAllFriends(userId)
                 .stream()
-                .map(UserMapper::UserToDTO)
+                .map(UserMapper::userToDTO)
                 .toList();
     }
 
@@ -104,9 +78,9 @@ public class UserService {
         throwIfUserNotPresent(otherId);
         throwIfTheSameUsers(userId, otherId);
         return userRepository
-                .getMutualFriends(userId,otherId )
+                .getMutualFriends(userId, otherId)
                 .stream()
-                .map(UserMapper::UserToDTO)
+                .map(UserMapper::userToDTO)
                 .toList();
     }
 
