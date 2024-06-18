@@ -8,7 +8,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.yandex.practicum.filmorate.exception.IdNotFoundException;
-import ru.yandex.practicum.filmorate.repository.film.FilmStorage;
+//import ru.yandex.practicum.filmorate.repository.film.FilmStorage;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
