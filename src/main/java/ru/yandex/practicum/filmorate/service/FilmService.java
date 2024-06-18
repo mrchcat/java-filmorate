@@ -29,7 +29,6 @@ public class FilmService {
     @Value("${filmorate.filmservice.count}")
     private int countByDefault;
     private final FilmRepository filmRepository;
-    private final UserRepository userRepository;
     private final GenreRepository genreRepository;
     private final RatingRepository ratingRepository;
     private final UserService userService;
