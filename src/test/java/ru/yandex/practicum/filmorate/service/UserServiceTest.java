@@ -7,35 +7,47 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ru.yandex.practicum.filmorate.exception.ObjectAlreadyExistsException;
+import ru.yandex.practicum.filmorate.dto.user.NewUserRequestDTO;
+import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.repository.user.UserRepository;
+import ru.yandex.practicum.filmorate.utils.UserMapper;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import java.time.LocalDate;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
-//    @Mock
-//    UserRepository userStorage;
-//    @InjectMocks
-//    UserService userService;
-//
-//    @Test
-//    @DisplayName("add friend to the same user")
-//    void testAddFriendToSame() {
-//        int userId = 1;
-//        Mockito.when(userStorage.containsUserById(userId)).thenReturn(true);
-//        assertThrows(ObjectAlreadyExistsException.class, () -> userService.addFriend(userId, userId));
-//    }
-//
-//    @Test
-//    @DisplayName("add friend to different users")
-//    void testAddFriendToDifferent() {
-//        int userId1 = 1;
-//        int userId2 = 2;
-//        Mockito.when(userStorage.containsUserById(userId1)).thenReturn(true);
-//        Mockito.when(userStorage.containsUserById(userId2)).thenReturn(true);
-//        userService.addFriend(userId1, userId2);
-//        Mockito.verify(userStorage).requestFriendship(userId1, userId2);
-//    }
+    @Mock
+    UserRepository userRepository;
+    @InjectMocks
+    UserService userService;
 
+    @Test
+    @DisplayName("add user")
+    void addUserTest() {
+        NewUserRequestDTO dto = NewUserRequestDTO.builder()
+                .email("sss@mailru")
+                .login("login")
+                .name("name")
+                .birthday(LocalDate.of(1980, 2, 1))
+                .build();
+        User user1 = User.builder()
+                .email("sss@mailru")
+                .login("login")
+                .name("name")
+                .birthday(LocalDate.of(1980, 2, 1))
+                .build();
+        User user2 = User.builder()
+                .id(1)
+                .email("sss@mailru")
+                .login("login")
+                .name("name")
+                .birthday(LocalDate.of(1980, 2, 1))
+                .build();
+        Mockito.when(userRepository.addUser(user1)).thenReturn(user2);
+        userService.addUser(dto);
+        Mockito.verify(userRepository).addUser(user1);
+        assertEquals(UserMapper.userToDTO(user2), userService.addUser(dto));
+    }
 }

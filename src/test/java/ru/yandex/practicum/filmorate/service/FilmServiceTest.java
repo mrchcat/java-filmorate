@@ -7,54 +7,44 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ru.yandex.practicum.filmorate.exception.IdNotFoundException;
-//import ru.yandex.practicum.filmorate.repository.film.FilmStorage;
+import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.repository.film.FilmRepository;
+import ru.yandex.practicum.filmorate.utils.FilmMapper;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Set;
 
 @ExtendWith(MockitoExtension.class)
 class FilmServiceTest {
-//    @Mock
-//    FilmStorage filmStorage;
-//    @Mock
-//    UserService userService;
-//    @InjectMocks
-//    FilmService filmService;
-//
-//    @Test
-//    @DisplayName("get likes from bad film ")
-//    void testGetLikesFromBadFilm() {
-//        Mockito.when(filmStorage.containsId(10)).thenReturn(false);
-//        assertThrows(IdNotFoundException.class, () -> filmService.getFilmLikes(10));
-//    }
-//
-//    @Test
-//    @DisplayName("add likes to film by bad user")
-//    void testAddLikeByBadUser() {
-//        Mockito.when(filmStorage.containsId(10)).thenReturn(true);
-//        Mockito.doThrow(new IdNotFoundException("")).when(userService).throwIfUserNotPresent(20);
-//        assertThrows(IdNotFoundException.class, () -> filmService.addLikeToFilm(10, 20));
-//    }
-//
-//
-//    @Test
-//    @DisplayName("verify that call to add like from storage")
-//    void testAddLike() {
-//        int filmId = 10;
-//        int userId = 20;
-//        Mockito.when(filmStorage.containsId(filmId)).thenReturn(true);
-//        Mockito.doNothing().when(userService).throwIfUserNotPresent(userId);
-//        filmService.addLikeToFilm(filmId, userId);
-//        Mockito.verify(filmStorage).addUserLikeToFilm(filmId, userId);
-//    }
-//
-//    @Test
-//    @DisplayName("verify that call to get popular films")
-//    void testGetPopularFIlms() {
-//        int count = 4;
-//        filmService.getMostPopularFilms(count);
-//        Mockito.verify(filmStorage).getMostPopularFilms(count);
-//    }
-//
+
+    @Mock
+    FilmRepository filmRepository;
+    @Mock
+    FilmMapper filmMapper;
+
+
+    @InjectMocks
+    FilmService filmService;
+
+    @Test
+    @DisplayName("get all films")
+    void getAllFilmsTest() {
+        Film film = Film.builder()
+                .id(1)
+                .name("ssss")
+                .description("sssss")
+                .duration(120)
+                .releaseDate(LocalDate.of(1990, 2, 2))
+                .mpaId(1)
+                .genresId(Set.of(1))
+                .build();
+        List<Film> films = List.of(film);
+        Mockito.when(filmRepository.getAllFilms()).thenReturn(films);
+        Mockito.when(filmMapper.filmToDTO(film)).thenReturn(null);
+        filmService.getAllFilms();
+        Mockito.verify(filmRepository).getAllFilms();
+    }
+
 
 }

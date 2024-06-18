@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -17,6 +18,7 @@ import java.time.LocalDate;
 @Setter
 @Builder
 @ToString
+@EqualsAndHashCode
 public class UpdateUserRequestDTO {
     @Positive(message = "id must be positive")
     private Integer id;

@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Pattern;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -16,6 +17,7 @@ import java.time.LocalDate;
 @Setter
 @Builder
 @ToString
+@EqualsAndHashCode
 public class NewUserRequestDTO {
     @NotNull(message = "email is mandatory")
     @Email(message = "email is not valid ")
