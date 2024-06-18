@@ -14,6 +14,7 @@ import ru.yandex.practicum.filmorate.model.Rating;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Getter
 @Setter
@@ -33,6 +34,6 @@ public class UpdateFilmRequestDTO {
         private int duration;
         @NotNull(message = "mpa rating is mandatory")
         private Rating mpa;
-        @NotNull(message = "genres are mandatory")
+//        @NotNull(message = "genres are mandatory")
         private List<Genre> genres;
 }

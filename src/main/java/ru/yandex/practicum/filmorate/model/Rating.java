@@ -12,6 +12,6 @@ import lombok.ToString;
 @ToString
 public class Rating {
     private int id;
-    @JsonIgnore
+//    @JsonIgnore
     private String name;
 }

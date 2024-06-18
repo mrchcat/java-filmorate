@@ -9,6 +9,8 @@ import ru.yandex.practicum.filmorate.repository.genre.GenreRepository;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 @Repository
 public class FilmDBRepository extends BaseRepository<Film> implements FilmRepository {
@@ -22,6 +24,21 @@ public class FilmDBRepository extends BaseRepository<Film> implements FilmReposi
     private static final String DELETE_GENRES_QUERY = "DELETE FROM film_genre WHERE film_id=?";
     private static final String INSERT_GENRES_QUERY = "INSERT INTO film_genre(film_id,genre_id) VALUES (?,?)";
     private static final String GET_ALL_FILMS_QUERY = "SELECT * FROM film";
+    private static final String ADD_USERLIKE_TOFILM_QUERY = "INSERT INTO likes(film_id,user_id) VALUES (?,?);";
+    private static final String GET_USERLIKE_TOFILM_QUERY = "SELECT COUNT(*) FROM likes WHERE film_id=? AND user_id=?";
+    private static final String DELETE_USERLIKE_TOFILM_QUERY = "DELETE FROM likes WHERE film_id=? AND user_id=?";
+    private static final String GET_FILM_LIKES_QUERY = "SELECT COUNT(*) FROM likes WHERE film_id=?";
+    private static final String GET_MOST_POPULAR_FILMS_QUERY=
+            """ 
+            SELECT f.id,f.name,f.description, f.release_date, f.duration, f.mpa_rating_id
+            FROM likes AS l
+            JOIN film AS f ON f.id=l.film_id
+            GROUP BY  f.id,f.name,f.description, f.release_date, f.duration, f.mpa_rating_id
+            ORDER BY COUNT(f.id) DESC LIMIT ?;
+            """;
+    private static final String GET_FILM_BY_ID = "SELECT * FROM film WHERE id=?";
+
+
     private final GenreRepository genreRepository;
 
 
@@ -78,9 +95,50 @@ public class FilmDBRepository extends BaseRepository<Film> implements FilmReposi
         Collection<Film> films = findMany(GET_ALL_FILMS_QUERY);
         for (Film film : films) {
             int filmId = film.getId();
-            List<Integer> genresId = genreRepository.getGenresByFilm(filmId);
+            Set<Integer> genresId = genreRepository.getGenresByFilm(filmId);
             film.setGenresId(genresId);
         }
         return films;
+    }
+
+    @Override
+    public void addUserLikeToFilm(Integer filmId, Integer userId) {
+        insertMultKeys(ADD_USERLIKE_TOFILM_QUERY, filmId, userId);
+    }
+
+    @Override
+    public boolean containsUserLikeForFilm(Integer filmId, Integer userId) {
+        var likes = Optional.ofNullable(jdbc.queryForObject(GET_USERLIKE_TOFILM_QUERY, Integer.class, filmId, userId));
+        return likes.isPresent() && !likes.get().equals(0);
+    }
+
+    @Override
+    public void deleteUserLikeFromFilm(Integer filmId, Integer userId) {
+        delete(DELETE_USERLIKE_TOFILM_QUERY, filmId, userId);
+    }
+
+    @Override
+    public int getFilmLikes(Integer filmId) {
+        return Optional
+                .ofNullable(jdbc.queryForObject(GET_FILM_LIKES_QUERY, Integer.class, filmId))
+                .orElse(0);
+    }
+
+    @Override
+    public Collection<Film> getMostPopularFilms(int count) {
+        List<Film> films = findMany(GET_MOST_POPULAR_FILMS_QUERY, count);
+        for (Film film : films) {
+            int filmId = film.getId();
+            Set<Integer> genresId = genreRepository.getGenresByFilm(filmId);
+            film.setGenresId(genresId);
+        }
+        return films;
+    }
+
+    @Override
+    public Film getFilmById(int filmId) {
+        Film film = findOne(GET_FILM_BY_ID, filmId).orElseThrow();
+        film.setGenresId(genreRepository.getGenresByFilm(filmId));
+        return film;
     }
 }

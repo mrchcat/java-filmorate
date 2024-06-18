@@ -10,6 +10,8 @@ import ru.yandex.practicum.filmorate.repository.BaseRepository;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Repository
 @Primary
@@ -34,9 +36,9 @@ public class GenreDBRepository extends BaseRepository<Genre> implements GenreRep
     }
 
     @Override
-    public List<Integer> getGenresByFilm(Integer filmId) {
+    public Set<Integer> getGenresByFilm(Integer filmId) {
         return findMany(FIND_GENRE_BY_FILM_ID_QUERY,filmId).stream()
                 .map(Genre::getId)
-                .toList();
+                .collect(Collectors.toSet());
     }
 }

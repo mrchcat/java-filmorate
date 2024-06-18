@@ -12,7 +12,7 @@ import lombok.ToString;
 @ToString
 public class Genre {
     private int id;
-    @JsonIgnore
+//    @JsonIgnore
     private String name;
 }
 

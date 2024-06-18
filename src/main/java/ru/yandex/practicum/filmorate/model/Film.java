@@ -12,6 +12,7 @@ import ru.yandex.practicum.filmorate.annotations.AfterCinemaEra;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 @Setter
 @Getter
@@ -21,7 +22,7 @@ public class Film {
     private int id;
     private String name;
     private String description;
-    private List<Integer> genresId;
+    private Set<Integer> genresId;
     private Integer mpaId;
     private LocalDate releaseDate;
     private int duration;

@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.repository.film;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.util.Collection;
+import java.util.Optional;
 
 public interface FilmRepository {
     Film addFilm(Film film);
@@ -13,13 +14,17 @@ public interface FilmRepository {
 
     boolean containsFilmById(int filmId);
 
+    Film getFilmById(int filmId);
+
     Collection<Film> getAllFilms();
 
-//    boolean addUserLikeToFilm(Integer filmId, Integer userId);
-//
-//    boolean deleteUserLikeFromFilm(Integer filmId, Integer userId);
-//
-//    Collection<Film> getMostPopularFilms(int count);
-//
-//    int getFilmLikes(Integer filmId);
+    void addUserLikeToFilm(Integer filmId, Integer userId);
+
+    boolean containsUserLikeForFilm(Integer filmId, Integer userId);
+
+    void deleteUserLikeFromFilm(Integer filmId, Integer userId);
+
+    Collection<Film> getMostPopularFilms(int count);
+
+    int getFilmLikes(Integer filmId);
 }
