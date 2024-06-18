@@ -17,7 +17,10 @@ public class UserDBRepository extends BaseRepository<User> implements UserReposi
     private static final String FIND_BY_ID_QUERY = "SELECT * FROM users WHERE id=?";
     private static final String FIND_BY_PARAM_QUERY = "SELECT * FROM users WHERE email = ? AND login=? AND birthday=?";
     private static final String INSERT_QUERY =
-            "INSERT INTO users(email, login, username, birthday) VALUES (?, ?, ?, ?) returning id";
+            "INSERT INTO users(email, login, username, birthday) VALUES (?, ?, ?, ?)";
+//    INSERT for Postgres
+//    private static final String INSERT_QUERY =
+//            "INSERT INTO users(email, login, username, birthday) VALUES (?, ?, ?, ?) returning id";
     private static final String UPDATE_QUERY =
             "UPDATE users SET email = ?, login = ?, username = ?, birthday = ? WHERE id = ?";
     private static final String GET_ALL_FRIENDS_QUERY =
