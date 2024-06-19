@@ -14,9 +14,6 @@ import java.util.Set;
 
 @Repository
 public class FilmDBRepository extends BaseRepository<Film> implements FilmRepository {
-//    INSERT for Postgres
-//    private static final String INSERT_QUERY =
-//            "INSERT INTO film(name, description, release_date, duration, mpa_rating_id) VALUES (?,?,?,?,?) returning id";
     private static final String INSERT_QUERY =
             "INSERT INTO film(name, description, release_date, duration, mpa_rating_id) VALUES (?,?,?,?,?)";
     private static final String FIND_BY_PARAM_QUERY =
