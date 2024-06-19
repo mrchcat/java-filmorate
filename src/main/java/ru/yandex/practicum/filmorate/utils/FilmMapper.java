@@ -44,8 +44,8 @@ public class FilmMapper {
                 .description(film.getDescription())
                 .releaseDate(film.getReleaseDate())
                 .duration(film.getDuration())
-                .mpaDTO(ratingDTO)
-                .genreDTOList(genreDTOS)
+                .mpa(ratingDTO)
+                .genre(genreDTOS)
                 .build();
     }
 

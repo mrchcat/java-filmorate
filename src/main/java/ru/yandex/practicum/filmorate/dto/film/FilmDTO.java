@@ -18,6 +18,6 @@ public class FilmDTO {
     private String description;
     private LocalDate releaseDate;
     private int duration;
-    private RatingDTO mpaDTO;
-    private List<GenreDTO> genreDTOList;
+    private RatingDTO mpa;
+    private List<GenreDTO> genre;
 }
