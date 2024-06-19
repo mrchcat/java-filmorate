@@ -7,9 +7,9 @@ import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.dto.film.FilmDTO;
 import ru.yandex.practicum.filmorate.dto.film.NewFilmRequestDTO;
 import ru.yandex.practicum.filmorate.dto.film.UpdateFilmRequestDTO;
+import ru.yandex.practicum.filmorate.dto.genre.GenreFromNewOrUpdateFilmRequestDTO;
 import ru.yandex.practicum.filmorate.exception.IdNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.repository.film.FilmRepository;
 import ru.yandex.practicum.filmorate.repository.genre.GenreRepository;
 import ru.yandex.practicum.filmorate.repository.mparating.RatingRepository;
@@ -56,15 +56,19 @@ public class FilmService {
         }
     }
 
-    public Collection<Film> getMostPopularFilms(Integer count) {
+    public Collection<FilmDTO> getMostPopularFilms(Integer count) {
         if (isNull(count) || count <= 0) {
             count = countByDefault;
         }
-        return filmRepository.getMostPopularFilms(count);
+        return filmRepository.getMostPopularFilms(count)
+                .stream()
+                .map(filmMapper::filmToDTO)
+                .toList();
     }
 
     public Collection<FilmDTO> getAllFilms() {
-        return filmRepository.getAllFilms().stream()
+        return filmRepository.getAllFilms()
+                .stream()
                 .map(filmMapper::filmToDTO)
                 .toList();
     }
@@ -75,8 +79,8 @@ public class FilmService {
     }
 
     public FilmDTO addFilm(NewFilmRequestDTO dto) {
-        throwIfMPARatingNotPresent(dto.getMpa().getId());
-        throwIfGenresNotPresent(dto.getGenres());
+        throwIfMPARatingNotPresent(dto.getMpaDTO().getId());
+        throwIfGenresNotPresent(dto.getGenresDTOList());
         Film film = FilmMapper.newFilmRequestToFilm(dto);
         Film newFilm = filmRepository.addFilm(film);
         log.info("Film added: {}", newFilm);
@@ -85,8 +89,8 @@ public class FilmService {
 
     public FilmDTO updateFilm(UpdateFilmRequestDTO dto) {
         throwIfFilmNotPresent(dto.getId());
-        throwIfMPARatingNotPresent(dto.getMpa().getId());
-        throwIfGenresNotPresent(dto.getGenres());
+        throwIfMPARatingNotPresent(dto.getMpaDTO().getId());
+        throwIfGenresNotPresent(dto.getGenresDTOList());
         Film film = FilmMapper.updateFilmRequestDTOToFilm(dto);
         filmRepository.updateFilm(film);
         log.info("Film updated: {}", film);
@@ -105,12 +109,13 @@ public class FilmService {
         }
     }
 
-    private void throwIfGenresNotPresent(List<Genre> genres) {
-        if (genres == null) {
+    private void throwIfGenresNotPresent(List<GenreFromNewOrUpdateFilmRequestDTO> genresDTOList) {
+        if (genresDTOList == null) {
             return;
         }
-        boolean isAllGenreIdPresent = genres.stream()
-                .map(Genre::getId)
+        boolean isAllGenreIdPresent = genresDTOList
+                .stream()
+                .map(GenreFromNewOrUpdateFilmRequestDTO::getId)
                 .map(genreRepository::getGenreById)
                 .allMatch(Optional::isPresent);
         if (!isAllGenreIdPresent) {

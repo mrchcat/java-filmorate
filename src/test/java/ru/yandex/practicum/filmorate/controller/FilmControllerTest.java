@@ -56,7 +56,7 @@ class FilmControllerTest {
                 .description("desc")
                 .releaseDate(LocalDate.of(1980, 1, 1))
                 .duration(10)
-                .mpa(Rating.builder().id(1).name("some rating").build())
+                .mpaDTO(Rating.builder().id(1).name("some rating").build())
                 .build();
         String json = objectMapper.writeValueAsString(dto);
         mockMvc.perform(post("/films").contentType("application/json").content(json));

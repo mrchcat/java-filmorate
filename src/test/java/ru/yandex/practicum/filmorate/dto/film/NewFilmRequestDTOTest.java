@@ -38,7 +38,7 @@ class NewFilmRequestDTOTest {
                 .description("desc")
                 .releaseDate(releaseDate)
                 .duration(10)
-                .mpa(Rating.builder().id(1).name("some rating").build())
+                .mpaDTO(Rating.builder().id(1).name("some rating").build())
                 .build();
         assertFalse(validator.validate(dto).isEmpty());
     }
@@ -52,7 +52,7 @@ class NewFilmRequestDTOTest {
                 .description("desc")
                 .releaseDate(releaseDate)
                 .duration(10)
-                .mpa(Rating.builder().id(1).name("some rating").build())
+                .mpaDTO(Rating.builder().id(1).name("some rating").build())
                 .build();
         assertTrue(validator.validate(dto).isEmpty());
     }
@@ -66,7 +66,7 @@ class NewFilmRequestDTOTest {
                 .description("desc")
                 .releaseDate(releaseDate)
                 .duration(-10)
-                .mpa(Rating.builder().id(1).name("some rating").build())
+                .mpaDTO(Rating.builder().id(1).name("some rating").build())
                 .build();
         assertFalse(validator.validate(dto).isEmpty());
     }
@@ -80,7 +80,7 @@ class NewFilmRequestDTOTest {
                 .description("desc")
                 .releaseDate(releaseDate)
                 .duration(10)
-                .mpa(Rating.builder().id(1).name("some rating").build())
+                .mpaDTO(Rating.builder().id(1).name("some rating").build())
                 .build();
         assertFalse(validator.validate(dto).isEmpty());
     }
@@ -94,7 +94,7 @@ class NewFilmRequestDTOTest {
                 .description("desc")
                 .releaseDate(releaseDate)
                 .duration(10)
-                .mpa(Rating.builder().id(1).name("some rating").build())
+                .mpaDTO(Rating.builder().id(1).name("some rating").build())
                 .build();
         assertTrue(validator.validate(dto).isEmpty());
     }

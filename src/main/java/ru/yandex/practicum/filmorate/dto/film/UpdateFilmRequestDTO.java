@@ -3,15 +3,11 @@ package ru.yandex.practicum.filmorate.dto.film;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.validator.constraints.Length;
 import ru.yandex.practicum.filmorate.annotations.AfterCinemaEra;
-import ru.yandex.practicum.filmorate.model.Genre;
-import ru.yandex.practicum.filmorate.model.Rating;
+import ru.yandex.practicum.filmorate.dto.genre.GenreFromNewOrUpdateFilmRequestDTO;
+import ru.yandex.practicum.filmorate.dto.rating.RatingFromNewOrUpdateFilmRequestDTO;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -34,6 +30,6 @@ public class UpdateFilmRequestDTO {
     @Positive(message = "duration must be positive integer")
     private int duration;
     @NotNull(message = "mpa rating is mandatory")
-    private Rating mpa;
-    private List<Genre> genres;
+    private RatingFromNewOrUpdateFilmRequestDTO mpaDTO;
+    private List<GenreFromNewOrUpdateFilmRequestDTO> genresDTOList;
 }

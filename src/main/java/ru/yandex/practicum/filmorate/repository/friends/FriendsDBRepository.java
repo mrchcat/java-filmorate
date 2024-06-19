@@ -15,10 +15,7 @@ import ru.yandex.practicum.filmorate.repository.BaseRepository;
 import java.util.Optional;
 
 import static org.springframework.transaction.annotation.Isolation.REPEATABLE_READ;
-import static ru.yandex.practicum.filmorate.model.FriendshipStatus.ABSENT;
-import static ru.yandex.practicum.filmorate.model.FriendshipStatus.CONFIRMED;
-import static ru.yandex.practicum.filmorate.model.FriendshipStatus.REQUESTED;
-import static ru.yandex.practicum.filmorate.model.FriendshipStatus.UNKNOWN;
+import static ru.yandex.practicum.filmorate.model.FriendshipStatus.*;
 
 @Repository
 @Primary

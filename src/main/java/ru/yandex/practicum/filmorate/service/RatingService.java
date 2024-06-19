@@ -2,7 +2,7 @@ package ru.yandex.practicum.filmorate.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.dto.RatingDTO;
+import ru.yandex.practicum.filmorate.dto.rating.RatingDTO;
 import ru.yandex.practicum.filmorate.exception.IdNotFoundException;
 import ru.yandex.practicum.filmorate.repository.mparating.RatingRepository;
 import ru.yandex.practicum.filmorate.utils.RatingMapper;

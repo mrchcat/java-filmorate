@@ -8,9 +8,7 @@ import ru.yandex.practicum.filmorate.model.FriendshipStatus;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import static ru.yandex.practicum.filmorate.model.FriendshipStatus.CONFIRMED;
-import static ru.yandex.practicum.filmorate.model.FriendshipStatus.REQUESTED;
-import static ru.yandex.practicum.filmorate.model.FriendshipStatus.UNKNOWN;
+import static ru.yandex.practicum.filmorate.model.FriendshipStatus.*;
 
 @Component
 public class FriendsRowMapper implements RowMapper<Friends> {

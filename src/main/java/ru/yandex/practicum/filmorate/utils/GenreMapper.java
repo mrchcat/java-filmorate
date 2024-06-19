@@ -1,7 +1,7 @@
 package ru.yandex.practicum.filmorate.utils;
 
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.dto.GenreDTO;
+import ru.yandex.practicum.filmorate.dto.genre.GenreDTO;
 import ru.yandex.practicum.filmorate.model.Genre;
 
 @Component

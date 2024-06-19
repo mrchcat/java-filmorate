@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.dto;
+package ru.yandex.practicum.filmorate.dto.rating;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -9,7 +9,6 @@ import lombok.ToString;
 @Setter
 @Builder
 @ToString
-public class RatingDTO {
+public class RatingFromNewOrUpdateFilmRequestDTO {
     private int id;
-    private String name;
 }
