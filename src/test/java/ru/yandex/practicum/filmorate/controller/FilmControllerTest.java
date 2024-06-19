@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,8 +15,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import ru.yandex.practicum.filmorate.dto.film.NewFilmRequestDTO;
 import ru.yandex.practicum.filmorate.dto.film.UpdateFilmRequestDTO;
-import ru.yandex.practicum.filmorate.model.Genre;
-import ru.yandex.practicum.filmorate.model.Rating;
+import ru.yandex.practicum.filmorate.dto.genre.GenreFromNewOrUpdateFilmRequestDTO;
+import ru.yandex.practicum.filmorate.dto.rating.RatingFromNewOrUpdateFilmRequestDTO;
 import ru.yandex.practicum.filmorate.service.FilmService;
 
 import java.time.LocalDate;
@@ -26,6 +27,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
 @ExtendWith(MockitoExtension.class)
+@Slf4j
 class FilmControllerTest {
     private final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
     private MockMvc mockMvc;
@@ -56,10 +58,11 @@ class FilmControllerTest {
                 .description("desc")
                 .releaseDate(LocalDate.of(1980, 1, 1))
                 .duration(10)
-                .mpaDTO(Rating.builder().id(1).name("some rating").build())
+                .mpa(RatingFromNewOrUpdateFilmRequestDTO.builder().id(1).build())
                 .build();
         String json = objectMapper.writeValueAsString(dto);
         mockMvc.perform(post("/films").contentType("application/json").content(json));
+        log.info(json);
         Mockito.verify(filmService).addFilm(dto);
     }
 
@@ -72,8 +75,8 @@ class FilmControllerTest {
                 .description("dsdsd")
                 .releaseDate(LocalDate.of(1980, 1, 1))
                 .duration(10)
-                .mpa(Rating.builder().id(1).name("some rating").build())
-                .genres(List.of(Genre.builder().id(1).name("ssss").build()))
+                .mpa(RatingFromNewOrUpdateFilmRequestDTO.builder().id(1).build())
+                .genres(List.of(GenreFromNewOrUpdateFilmRequestDTO.builder().id(1).build()))
                 .build();
         String json = objectMapper.writeValueAsString(dto);
         mockMvc.perform(put("/films").contentType("application/json").content(json));

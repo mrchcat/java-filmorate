@@ -50,7 +50,7 @@ public class FilmMapper {
     }
 
     public static Film newFilmRequestToFilm(NewFilmRequestDTO dto) {
-        List<GenreFromNewOrUpdateFilmRequestDTO> genresDTO = dto.getGenresDTOList();
+        List<GenreFromNewOrUpdateFilmRequestDTO> genresDTO = dto.getGenres();
         if (genresDTO == null) {
             genresDTO = Collections.emptyList();
         }
@@ -64,13 +64,13 @@ public class FilmMapper {
                 .description(dto.getDescription())
                 .releaseDate(dto.getReleaseDate())
                 .duration(dto.getDuration())
-                .mpaId(dto.getMpaDTO().getId())
+                .mpaId(dto.getMpa().getId())
                 .genresId(genresId)
                 .build();
     }
 
     public static Film updateFilmRequestDTOToFilm(UpdateFilmRequestDTO dto) {
-        List<GenreFromNewOrUpdateFilmRequestDTO> genresDTO = dto.getGenresDTOList();
+        List<GenreFromNewOrUpdateFilmRequestDTO> genresDTO = dto.getGenres();
         if (genresDTO == null) {
             genresDTO = Collections.emptyList();
         }
@@ -85,7 +85,7 @@ public class FilmMapper {
                 .description(dto.getDescription())
                 .releaseDate(dto.getReleaseDate())
                 .duration(dto.getDuration())
-                .mpaId(dto.getMpaDTO().getId())
+                .mpaId(dto.getMpa().getId())
                 .genresId(genresId)
                 .build();
     }

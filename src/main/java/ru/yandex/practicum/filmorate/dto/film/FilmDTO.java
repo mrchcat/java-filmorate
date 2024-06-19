@@ -1,9 +1,6 @@
 package ru.yandex.practicum.filmorate.dto.film;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import ru.yandex.practicum.filmorate.dto.genre.GenreDTO;
 import ru.yandex.practicum.filmorate.dto.rating.RatingDTO;
 
@@ -14,6 +11,7 @@ import java.util.List;
 @Setter
 @Builder
 @ToString
+@EqualsAndHashCode
 public class FilmDTO {
     private int id;
     private String name;

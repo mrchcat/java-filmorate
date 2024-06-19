@@ -7,7 +7,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ru.yandex.practicum.filmorate.model.Rating;
+import ru.yandex.practicum.filmorate.dto.rating.RatingFromNewOrUpdateFilmRequestDTO;
 
 import java.time.LocalDate;
 
@@ -38,7 +38,7 @@ class NewFilmRequestDTOTest {
                 .description("desc")
                 .releaseDate(releaseDate)
                 .duration(10)
-                .mpaDTO(Rating.builder().id(1).name("some rating").build())
+                .mpa(RatingFromNewOrUpdateFilmRequestDTO.builder().id(1).build())
                 .build();
         assertFalse(validator.validate(dto).isEmpty());
     }
@@ -52,7 +52,7 @@ class NewFilmRequestDTOTest {
                 .description("desc")
                 .releaseDate(releaseDate)
                 .duration(10)
-                .mpaDTO(Rating.builder().id(1).name("some rating").build())
+                .mpa(RatingFromNewOrUpdateFilmRequestDTO.builder().id(1).build())
                 .build();
         assertTrue(validator.validate(dto).isEmpty());
     }
@@ -66,7 +66,7 @@ class NewFilmRequestDTOTest {
                 .description("desc")
                 .releaseDate(releaseDate)
                 .duration(-10)
-                .mpaDTO(Rating.builder().id(1).name("some rating").build())
+                .mpa(RatingFromNewOrUpdateFilmRequestDTO.builder().id(1).build())
                 .build();
         assertFalse(validator.validate(dto).isEmpty());
     }
@@ -80,7 +80,7 @@ class NewFilmRequestDTOTest {
                 .description("desc")
                 .releaseDate(releaseDate)
                 .duration(10)
-                .mpaDTO(Rating.builder().id(1).name("some rating").build())
+                .mpa(RatingFromNewOrUpdateFilmRequestDTO.builder().id(1).build())
                 .build();
         assertFalse(validator.validate(dto).isEmpty());
     }
@@ -94,7 +94,7 @@ class NewFilmRequestDTOTest {
                 .description("desc")
                 .releaseDate(releaseDate)
                 .duration(10)
-                .mpaDTO(Rating.builder().id(1).name("some rating").build())
+                .mpa(RatingFromNewOrUpdateFilmRequestDTO.builder().id(1).build())
                 .build();
         assertTrue(validator.validate(dto).isEmpty());
     }

@@ -79,8 +79,8 @@ public class FilmService {
     }
 
     public FilmDTO addFilm(NewFilmRequestDTO dto) {
-        throwIfMPARatingNotPresent(dto.getMpaDTO().getId());
-        throwIfGenresNotPresent(dto.getGenresDTOList());
+        throwIfMPARatingNotPresent(dto.getMpa().getId());
+        throwIfGenresNotPresent(dto.getGenres());
         Film film = FilmMapper.newFilmRequestToFilm(dto);
         Film newFilm = filmRepository.addFilm(film);
         log.info("Film added: {}", newFilm);
@@ -89,8 +89,8 @@ public class FilmService {
 
     public FilmDTO updateFilm(UpdateFilmRequestDTO dto) {
         throwIfFilmNotPresent(dto.getId());
-        throwIfMPARatingNotPresent(dto.getMpaDTO().getId());
-        throwIfGenresNotPresent(dto.getGenresDTOList());
+        throwIfMPARatingNotPresent(dto.getMpa().getId());
+        throwIfGenresNotPresent(dto.getGenres());
         Film film = FilmMapper.updateFilmRequestDTOToFilm(dto);
         filmRepository.updateFilm(film);
         log.info("Film updated: {}", film);

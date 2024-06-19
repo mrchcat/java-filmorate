@@ -30,6 +30,6 @@ public class UpdateFilmRequestDTO {
     @Positive(message = "duration must be positive integer")
     private int duration;
     @NotNull(message = "mpa rating is mandatory")
-    private RatingFromNewOrUpdateFilmRequestDTO mpaDTO;
-    private List<GenreFromNewOrUpdateFilmRequestDTO> genresDTOList;
+    private RatingFromNewOrUpdateFilmRequestDTO mpa;
+    private List<GenreFromNewOrUpdateFilmRequestDTO> genres;
 }
