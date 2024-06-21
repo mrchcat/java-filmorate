@@ -28,15 +28,15 @@ public class FilmDBRepository extends BaseRepository<Film> implements FilmReposi
     private static final String GET_USERLIKE_TOFILM_QUERY = "SELECT COUNT(*) FROM likes WHERE film_id=? AND user_id=?";
     private static final String DELETE_USERLIKE_TOFILM_QUERY = "DELETE FROM likes WHERE film_id=? AND user_id=?";
     private static final String GET_FILM_LIKES_QUERY = "SELECT COUNT(*) FROM likes WHERE film_id=?";
-    //    private static final String GET_MOST_POPULAR_FILMS_QUERY =
-//            "SELECT f.id,f.name,f.description, f.release_date, f.duration, f.mpa_rating_id " +
-//                    "FROM likes AS l LEFT JOIN film AS f ON f.id=l.film_id " +
-//                    "GROUP BY  f.id,f.name,f.description, f.release_date, f.duration, f.mpa_rating_id " +
-//                    "ORDER BY COUNT(f.id) DESC LIMIT ?;";
-    private static final String GET_MOST_POPULAR_FILMS_QUERY =
-            "SELECT f.id,f.name,f.description, f.release_date, f.duration, f.mpa_rating_id FROM film AS f LEFT JOINT" +
-                    "(SELECT film_id, COUNT(*) AS count FROM likes GROUP BY film_id) AS t ON f.id=t.film_id " +
-                    "ORDER BY count DESC LIMIT ?;";
+        private static final String GET_MOST_POPULAR_FILMS_QUERY =
+            "SELECT f.id,f.name,f.description, f.release_date, f.duration, f.mpa_rating_id " +
+                    "FROM likes AS l LEFT JOIN film AS f ON f.id=l.film_id " +
+                    "GROUP BY  f.id,f.name,f.description, f.release_date, f.duration, f.mpa_rating_id " +
+                    "ORDER BY COUNT(f.id) DESC LIMIT ?;";
+//    private static final String GET_MOST_POPULAR_FILMS_QUERY =
+//            "SELECT f.id,f.name,f.description, f.release_date, f.duration, f.mpa_rating_id FROM film AS f LEFT JOINT" +
+//                    "(SELECT film_id, COUNT(*) AS count FROM likes GROUP BY film_id) AS t ON f.id=t.film_id " +
+//                    "ORDER BY count DESC LIMIT ?;";
 
     private static final String GET_FILM_BY_ID = "SELECT * FROM film WHERE id=?";
 
