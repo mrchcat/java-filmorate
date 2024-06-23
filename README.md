@@ -1,6 +1,6 @@
 # java-filmorate
 Template repository for Filmorate project.
-![Database schema](Database.png)
+![Database schema](src/main/resources/Database.png)
 
 ********************************************************************************
 ## USER

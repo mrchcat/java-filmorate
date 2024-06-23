@@ -1,7 +1,0 @@
-filmorate:
-  filmservice:
-    count: 10
-
-logging:
-  level:
-    org.zalando.logbook: TRACE

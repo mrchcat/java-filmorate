@@ -3,10 +3,15 @@ package ru.yandex.practicum.filmorate.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.dto.user.NewUserRequestDTO;
+import ru.yandex.practicum.filmorate.dto.user.UpdateUserRequestDTO;
+import ru.yandex.practicum.filmorate.dto.user.UserDTO;
 import ru.yandex.practicum.filmorate.exception.IdNotFoundException;
 import ru.yandex.practicum.filmorate.exception.ObjectAlreadyExistsException;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.user.UserStorage;
+import ru.yandex.practicum.filmorate.repository.friends.FriendsRepository;
+import ru.yandex.practicum.filmorate.repository.user.UserRepository;
+import ru.yandex.practicum.filmorate.utils.UserMapper;
 
 import java.util.Collection;
 
@@ -16,72 +21,93 @@ import static java.util.Objects.isNull;
 @Service
 @RequiredArgsConstructor
 public class UserService {
-    private final UserStorage userStorage;
+    private final UserRepository userRepository;
+    private final FriendsRepository friendsRepository;
 
-    public User addUser(User user) {
+    public UserDTO addUser(NewUserRequestDTO dto) {
+        User user = UserMapper.newUserRequestDTOToUser(dto);
         setName(user);
-        if (userStorage.containsUser(user)) {
-            throw new ObjectAlreadyExistsException("User already exists", user);
-        }
-        User newUser = userStorage.addUser(user);
+        User newUser = userRepository.addUser(user);
         log.info("User added: {}", newUser);
-        return newUser;
+        return UserMapper.userToDTO(newUser);
     }
 
-    public User updateUser(User user) {
+    public UserDTO updateUser(UpdateUserRequestDTO dto) {
+        User user = UserMapper.updateUserRequestDTOToUser(dto);
+        throwIfUserNotPresent(user);
         setName(user);
-        throwIfUserNotPresent(user.getId());
-        userStorage.updateUser(user);
+        userRepository.updateUser(user);
         log.info("User updated: {}", user);
-        return user;
+        return UserMapper.userToDTO(user);
     }
 
-    public Collection<User> getAllUsers() {
-        return userStorage.getAllUsers();
+    public Collection<UserDTO> getAllUsers() {
+        return userRepository
+                .getAllUsers()
+                .stream()
+                .map(UserMapper::userToDTO)
+                .toList();
     }
 
-    public void addFriend(Integer offerId, Integer acceptId) {
-        throwIfUserNotPresent(offerId);
-        throwIfUserNotPresent(acceptId);
-        throwIfTheSameUsers(offerId, acceptId);
-        userStorage.addFriend(offerId, acceptId);
-        log.info("User={} started friendship with user={}", offerId, acceptId);
+    public void sendRequestForFriendship(Integer applicantId, Integer approvingId) {
+        throwIfUserNotPresent(applicantId);
+        throwIfUserNotPresent(approvingId);
+        throwIfTheSameUsers(applicantId, approvingId);
+        friendsRepository.sendRequestForFriendship(applicantId, approvingId);
     }
 
-    public void deleteFriend(Integer offerId, Integer toDeleteId) {
-        throwIfUserNotPresent(offerId);
-        throwIfUserNotPresent(toDeleteId);
-        throwIfTheSameUsers(offerId, toDeleteId);
-        userStorage.deleteFriend(offerId, toDeleteId);
-        log.info("User={} stopped friendship with user={}", offerId, toDeleteId);
+
+    public void recallRequestForFriendship(Integer applicantId, Integer approvingId) {
+        throwIfUserNotPresent(applicantId);
+        throwIfUserNotPresent(approvingId);
+        throwIfTheSameUsers(applicantId, approvingId);
+        friendsRepository.recallRequestForFriendship(applicantId, approvingId);
     }
 
-    public Collection<User> getAllFriends(Integer userId) {
+    public Collection<UserDTO> getAllFriends(Integer userId) {
         throwIfUserNotPresent(userId);
-        return userStorage.getAllFriends(userId);
+        return userRepository
+                .getAllFriends(userId)
+                .stream()
+                .map(UserMapper::userToDTO)
+                .toList();
     }
 
-    public Collection<User> getMutualFriends(Integer id, Integer otherId) {
-        throwIfUserNotPresent(id);
+    public Collection<UserDTO> getMutualFriends(Integer userId, Integer otherId) {
+        throwIfUserNotPresent(userId);
         throwIfUserNotPresent(otherId);
-        return userStorage.getMutualFriends(id, otherId);
+        throwIfTheSameUsers(userId, otherId);
+        return userRepository
+                .getMutualFriends(userId, otherId)
+                .stream()
+                .map(UserMapper::userToDTO)
+                .toList();
     }
 
-    public void throwIfUserNotPresent(int id) {
-        if (!userStorage.containsId(id)) {
-            throw new IdNotFoundException(String.format("User with id=%d is not found", id));
+    public void throwIfUserNotPresent(User user) {
+        Integer userId = user.getId();
+        if (isNull(userId)) {
+            throw new IdNotFoundException("User ID is empty. Can not update user");
+        } else if (!userRepository.containsUserById(userId)) {
+            throw new IdNotFoundException(String.format("User with id=%d was not found", userId));
         }
     }
 
-    public void throwIfTheSameUsers(Integer offerId, Integer acceptId) {
-        if (offerId.equals(acceptId)) {
-            throw new ObjectAlreadyExistsException("User can't be own friend", offerId);
+    public void throwIfUserNotPresent(int userId) {
+        if (!userRepository.containsUserById(userId)) {
+            throw new IdNotFoundException(String.format("User with id=%d was not found", userId));
+        }
+    }
+
+    public void throwIfTheSameUsers(int offerId, int acceptId) {
+        if (offerId == acceptId) {
+            throw new ObjectAlreadyExistsException("User can't be it's own friend", offerId);
         }
     }
 
     private void setName(User user) {
         String name = user.getName();
-        if (isNull(name) || name.isEmpty()) {
+        if (isNull(name) || name.isBlank()) {
             user.setName(user.getLogin());
         }
     }
